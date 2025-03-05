@@ -1,10 +1,11 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { Heart, Dumbbell, Salad, Leaf, ChevronDown, Filter, Sliders } from 'lucide-react';
+import { Heart, Dumbbell, Salad, Leaf, ChevronDown, Filter, Sliders, Check, Download, ArrowRight, Star } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -12,6 +13,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from '@/lib/utils';
 
 const mealPlans = [
@@ -27,7 +29,33 @@ const mealPlans = [
     icon: Heart,
     color: 'bg-blue-500/10 text-blue-500',
     image: 'https://images.unsplash.com/photo-1547592180-85f173990554?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    tag: 'Most Popular'
+    tag: 'Most Popular',
+    nutrition: {
+      protein: '25%',
+      carbs: '50%',
+      fats: '25%'
+    },
+    suitableFor: ['Weight maintenance', 'Overall wellness', 'Busy professionals'],
+    sampleMeals: [
+      {
+        day: 'Monday',
+        breakfast: 'Greek yogurt with berries and granola',
+        lunch: 'Grilled chicken salad with mixed greens',
+        dinner: 'Baked salmon with roasted vegetables'
+      },
+      {
+        day: 'Tuesday',
+        breakfast: 'Avocado toast with poached eggs',
+        lunch: 'Quinoa bowl with roasted vegetables',
+        dinner: 'Lean beef stir-fry with brown rice'
+      },
+      {
+        day: 'Wednesday',
+        breakfast: 'Vegetable omelette with whole grain toast',
+        lunch: 'Turkey wrap with fresh vegetables',
+        dinner: 'Grilled fish with sweet potato'
+      }
+    ]
   },
   {
     id: 'high-protein',
@@ -40,7 +68,33 @@ const mealPlans = [
     cuisine: 'mixed',
     icon: Dumbbell,
     color: 'bg-purple-500/10 text-purple-500',
-    image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    nutrition: {
+      protein: '40%',
+      carbs: '40%',
+      fats: '20%'
+    },
+    suitableFor: ['Athletes', 'Bodybuilders', 'Post-workout recovery'],
+    sampleMeals: [
+      {
+        day: 'Monday',
+        breakfast: 'Protein pancakes with Greek yogurt',
+        lunch: 'Grilled chicken breast with quinoa',
+        dinner: 'Lean beef steak with steamed vegetables'
+      },
+      {
+        day: 'Tuesday',
+        breakfast: 'Egg white omelette with turkey bacon',
+        lunch: 'Tuna salad with mixed greens',
+        dinner: 'Baked chicken with sweet potato'
+      },
+      {
+        day: 'Wednesday',
+        breakfast: 'Protein smoothie with whey protein',
+        lunch: 'Grilled fish with brown rice',
+        dinner: 'Turkey meatballs with zucchini noodles'
+      }
+    ]
   },
   {
     id: 'keto',
@@ -53,7 +107,33 @@ const mealPlans = [
     cuisine: 'continental',
     icon: Salad,
     color: 'bg-orange-500/10 text-orange-500',
-    image: 'https://images.unsplash.com/photo-1607532941433-304659e8198a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1607532941433-304659e8198a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    nutrition: {
+      protein: '25%',
+      carbs: '5%',
+      fats: '70%'
+    },
+    suitableFor: ['Keto dieters', 'Low-carb lifestyle', 'Weight loss goals'],
+    sampleMeals: [
+      {
+        day: 'Monday',
+        breakfast: 'Avocado and bacon omelette',
+        lunch: 'Cobb salad with full-fat dressing',
+        dinner: 'Baked salmon with buttered asparagus'
+      },
+      {
+        day: 'Tuesday',
+        breakfast: 'Cream cheese and berry fat bombs',
+        lunch: 'Tuna salad in lettuce wraps',
+        dinner: 'Ribeye steak with garlic butter mushrooms'
+      },
+      {
+        day: 'Wednesday',
+        breakfast: 'Keto yogurt with chia seeds',
+        lunch: 'Chicken Caesar salad (no croutons)',
+        dinner: 'Zucchini noodles with bolognese sauce'
+      }
+    ]
   },
   {
     id: 'vegan',
@@ -66,7 +146,33 @@ const mealPlans = [
     cuisine: 'mixed',
     icon: Leaf,
     color: 'bg-green-500/10 text-green-500',
-    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    nutrition: {
+      protein: '20%',
+      carbs: '55%',
+      fats: '25%'
+    },
+    suitableFor: ['Vegans', 'Plant-based diet enthusiasts', 'Environmentally conscious'],
+    sampleMeals: [
+      {
+        day: 'Monday',
+        breakfast: 'Overnight chia pudding with berries',
+        lunch: 'Quinoa Buddha bowl with roasted vegetables',
+        dinner: 'Lentil curry with brown rice'
+      },
+      {
+        day: 'Tuesday',
+        breakfast: 'Tofu scramble with vegetables',
+        lunch: 'Chickpea salad wrap',
+        dinner: 'Vegan mushroom risotto'
+      },
+      {
+        day: 'Wednesday',
+        breakfast: 'Avocado toast with hemp seeds',
+        lunch: 'Black bean and sweet potato bowl',
+        dinner: 'Cauliflower and chickpea curry'
+      }
+    ]
   },
   {
     id: 'asian-fusion',
@@ -79,7 +185,33 @@ const mealPlans = [
     cuisine: 'asian',
     icon: Heart,
     color: 'bg-red-500/10 text-red-500',
-    image: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    nutrition: {
+      protein: '25%',
+      carbs: '55%',
+      fats: '20%'
+    },
+    suitableFor: ['Asian cuisine lovers', 'Flavor enthusiasts', 'Cultural explorers'],
+    sampleMeals: [
+      {
+        day: 'Monday',
+        breakfast: 'Congee with ginger and scallions',
+        lunch: 'Sushi bowl with brown rice',
+        dinner: 'Thai green curry with jasmine rice'
+      },
+      {
+        day: 'Tuesday',
+        breakfast: 'Miso soup with tofu',
+        lunch: 'Vietnamese rice paper rolls',
+        dinner: 'Korean bibimbap bowl'
+      },
+      {
+        day: 'Wednesday',
+        breakfast: 'Japanese-style omelette',
+        lunch: 'Chinese stir-fried vegetables with rice',
+        dinner: 'Indian butter chicken with naan'
+      }
+    ]
   },
   {
     id: 'mediterranean',
@@ -92,7 +224,56 @@ const mealPlans = [
     cuisine: 'mediterranean',
     icon: Heart,
     color: 'bg-blue-500/10 text-blue-500',
-    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    nutrition: {
+      protein: '20%',
+      carbs: '50%',
+      fats: '30%'
+    },
+    suitableFor: ['Heart health conscious', 'Olive oil enthusiasts', 'Healthy lifestyle seekers'],
+    sampleMeals: [
+      {
+        day: 'Monday',
+        breakfast: 'Greek yogurt with honey and walnuts',
+        lunch: 'Mediterranean chickpea salad',
+        dinner: 'Grilled fish with lemon and herbs'
+      },
+      {
+        day: 'Tuesday',
+        breakfast: 'Whole grain toast with olive tapenade',
+        lunch: 'Falafel wrap with tahini sauce',
+        dinner: 'Ratatouille with quinoa'
+      },
+      {
+        day: 'Wednesday',
+        breakfast: 'Spanish omelette with vegetables',
+        lunch: 'Tuna Niçoise salad',
+        dinner: 'Chicken souvlaki with tzatziki'
+      }
+    ]
+  }
+];
+
+const benefits = [
+  {
+    title: "Nutritionally Balanced",
+    description: "Every meal is crafted by nutritionists to ensure optimal balance of macronutrients.",
+    icon: Heart
+  },
+  {
+    title: "Freshly Prepared",
+    description: "Meals are prepared fresh daily with locally sourced ingredients when possible.",
+    icon: Leaf
+  },
+  {
+    title: "Convenient Delivery",
+    description: "Weekly deliveries straight to your doorstep, saving you time and effort.",
+    icon: ArrowRight
+  },
+  {
+    title: "Variety of Options",
+    description: "Never get bored with our rotating menu and seasonal specialties.",
+    icon: Star
   }
 ];
 
@@ -106,6 +287,7 @@ const MealPlans = () => {
   const [cuisineFilter, setCuisineFilter] = useState<CuisineType>('all');
   const [sortBy, setSortBy] = useState<SortType>('popular');
   const [filteredPlans, setFilteredPlans] = useState(mealPlans);
+  const [selectedPlan, setSelectedPlan] = useState(mealPlans[0]);
 
   useEffect(() => {
     let filtered = mealPlans;
@@ -138,6 +320,9 @@ const MealPlans = () => {
     }
 
     setFilteredPlans(filtered);
+    if (filtered.length > 0 && !filtered.find(plan => plan.id === selectedPlan.id)) {
+      setSelectedPlan(filtered[0]);
+    }
   }, [dietFilter, cuisineFilter, sortBy]);
 
   useEffect(() => {
@@ -250,72 +435,275 @@ const MealPlans = () => {
         <section className="py-16 bg-secondary/30">
           <div className="container max-w-7xl mx-auto px-4 sm:px-6">
             {filteredPlans.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredPlans.map((plan, index) => (
-                  <AnimatedSection key={plan.id} delay={index * 100}>
-                    <div className="bg-white rounded-2xl shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md hover:translate-y-[-4px]">
-                      <div className="aspect-w-16 aspect-h-9 relative">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-1">
+                  <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
+                    <h3 className="text-xl font-semibold mb-4">Available Plans</h3>
+                    <div className="space-y-3">
+                      {filteredPlans.map((plan) => (
+                        <div 
+                          key={plan.id}
+                          onClick={() => setSelectedPlan(plan)}
+                          className={cn(
+                            "p-4 rounded-lg cursor-pointer transition-all",
+                            selectedPlan.id === plan.id 
+                              ? "bg-primary/10 border border-primary" 
+                              : "bg-secondary hover:bg-primary/5"
+                          )}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`rounded-full p-2 ${plan.color}`}>
+                              <plan.icon className="w-4 h-4" />
+                            </div>
+                            <div>
+                              <h4 className="font-medium">{plan.title}</h4>
+                              <p className="text-sm text-muted-foreground">{plan.calories} calories</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="lg:col-span-2">
+                  <AnimatedSection>
+                    <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+                      <div className="relative">
                         <img 
-                          src={plan.image} 
-                          alt={plan.title}
-                          className="w-full h-48 object-cover"
+                          src={selectedPlan.image} 
+                          alt={selectedPlan.title}
+                          className="w-full h-64 object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                        <div className="absolute top-4 left-4">
-                          <div className={`rounded-full p-2 ${plan.color}`}>
-                            <plan.icon className="w-5 h-5" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                        <div className="absolute bottom-6 left-6 text-white">
+                          <div className={`rounded-full p-2 ${selectedPlan.color} bg-white inline-flex mb-2`}>
+                            <selectedPlan.icon className="w-5 h-5" />
                           </div>
+                          <h2 className="text-3xl font-bold">{selectedPlan.title}</h2>
+                          <p className="text-lg opacity-90">{selectedPlan.description}</p>
                         </div>
-                        {plan.tag && (
-                          <div className="absolute top-4 right-4">
-                            <span className="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">
-                              {plan.tag}
-                            </span>
-                          </div>
-                        )}
                       </div>
+                      
                       <div className="p-6">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="text-xl font-semibold">{plan.title}</h3>
-                          <div className="text-lg font-bold text-primary">
-                            ₹{plan.price}<span className="text-sm font-normal text-muted-foreground">/week</span>
-                          </div>
-                        </div>
-                        <p className="text-muted-foreground mb-3 line-clamp-2">{plan.description}</p>
-                        <div className="flex items-center gap-3 mb-4 text-sm">
-                          <span className={cn(
-                            "px-2 py-1 rounded-full text-xs",
-                            plan.dietType === 'veg' ? "bg-green-100 text-green-800" : 
-                            plan.dietType === 'non-veg' ? "bg-red-100 text-red-800" : 
-                            "bg-blue-100 text-blue-800"
-                          )}>
-                            {plan.dietType === 'veg' ? 'Vegetarian' : 
-                             plan.dietType === 'non-veg' ? 'Non-Vegetarian' : 
-                             'Veg & Non-Veg'}
-                          </span>
-                          <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-xs">
-                            {plan.calories} cal
-                          </span>
-                        </div>
-                        <div className="flex gap-3">
-                          <Button 
-                            className="flex-1 button-hover-effect"
-                            onClick={() => navigate(`/meal-plans/${plan.id}`)}
-                          >
-                            View Plan
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            className="flex-1 button-hover-effect"
-                            onClick={() => navigate('/customize')}
-                          >
-                            Customize
-                          </Button>
-                        </div>
+                        <Tabs defaultValue="overview" className="w-full">
+                          <TabsList className="grid w-full grid-cols-4">
+                            <TabsTrigger value="overview">Overview</TabsTrigger>
+                            <TabsTrigger value="nutrition">Nutrition</TabsTrigger>
+                            <TabsTrigger value="sampleMenu">Sample Menu</TabsTrigger>
+                            <TabsTrigger value="getStarted">Get Started</TabsTrigger>
+                          </TabsList>
+                          
+                          <TabsContent value="overview" className="pt-6">
+                            <div className="space-y-6">
+                              <div>
+                                <h3 className="text-xl font-semibold mb-3">About This Plan</h3>
+                                <p className="text-muted-foreground">{selectedPlan.longDescription}</p>
+                              </div>
+                              
+                              <div>
+                                <h3 className="text-xl font-semibold mb-3">Best For</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                  {selectedPlan.suitableFor.map((item, i) => (
+                                    <div key={i} className="flex items-center gap-2 bg-secondary/50 p-3 rounded-md">
+                                      <Check className="w-4 h-4 text-primary" />
+                                      <span>{item}</span>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                              
+                              <div>
+                                <h3 className="text-xl font-semibold mb-3">Plan Details</h3>
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                  <div className="bg-secondary/50 p-4 rounded-md text-center">
+                                    <p className="text-sm text-muted-foreground">Calories</p>
+                                    <p className="text-lg font-semibold">{selectedPlan.calories}</p>
+                                  </div>
+                                  <div className="bg-secondary/50 p-4 rounded-md text-center">
+                                    <p className="text-sm text-muted-foreground">Price</p>
+                                    <p className="text-lg font-semibold">₹{selectedPlan.price}/week</p>
+                                  </div>
+                                  <div className="bg-secondary/50 p-4 rounded-md text-center">
+                                    <p className="text-sm text-muted-foreground">Diet Type</p>
+                                    <p className="text-lg font-semibold capitalize">{selectedPlan.dietType}</p>
+                                  </div>
+                                  <div className="bg-secondary/50 p-4 rounded-md text-center">
+                                    <p className="text-sm text-muted-foreground">Cuisine</p>
+                                    <p className="text-lg font-semibold capitalize">{selectedPlan.cuisine}</p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </TabsContent>
+                          
+                          <TabsContent value="nutrition" className="pt-6">
+                            <div className="space-y-6">
+                              <div>
+                                <h3 className="text-xl font-semibold mb-3">Nutritional Breakdown</h3>
+                                <div className="bg-secondary/30 p-6 rounded-lg">
+                                  <div className="grid grid-cols-3 gap-4">
+                                    <div className="text-center">
+                                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 text-xl font-bold mb-2">
+                                        {selectedPlan.nutrition.protein}
+                                      </div>
+                                      <p className="font-medium">Protein</p>
+                                    </div>
+                                    <div className="text-center">
+                                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-600 text-xl font-bold mb-2">
+                                        {selectedPlan.nutrition.carbs}
+                                      </div>
+                                      <p className="font-medium">Carbs</p>
+                                    </div>
+                                    <div className="text-center">
+                                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-yellow-100 text-yellow-600 text-xl font-bold mb-2">
+                                        {selectedPlan.nutrition.fats}
+                                      </div>
+                                      <p className="font-medium">Fats</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              <div>
+                                <h3 className="text-xl font-semibold mb-3">Daily Calories</h3>
+                                <p className="text-muted-foreground mb-2">
+                                  Each day's meals are balanced to provide approximately {selectedPlan.calories} calories, 
+                                  distributed across breakfast, lunch, and dinner.
+                                </p>
+                                <div className="bg-secondary/30 p-4 rounded-lg">
+                                  <div className="flex items-center justify-between">
+                                    <span className="font-medium">Breakfast</span>
+                                    <span className="font-semibold">{Math.round(selectedPlan.calories * 0.25)} calories</span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 rounded-full h-2.5 my-2">
+                                    <div className="bg-primary h-2.5 rounded-full" style={{ width: '25%' }}></div>
+                                  </div>
+                                  
+                                  <div className="flex items-center justify-between mt-4">
+                                    <span className="font-medium">Lunch</span>
+                                    <span className="font-semibold">{Math.round(selectedPlan.calories * 0.35)} calories</span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 rounded-full h-2.5 my-2">
+                                    <div className="bg-primary h-2.5 rounded-full" style={{ width: '35%' }}></div>
+                                  </div>
+                                  
+                                  <div className="flex items-center justify-between mt-4">
+                                    <span className="font-medium">Dinner</span>
+                                    <span className="font-semibold">{Math.round(selectedPlan.calories * 0.40)} calories</span>
+                                  </div>
+                                  <div className="w-full bg-gray-200 rounded-full h-2.5 my-2">
+                                    <div className="bg-primary h-2.5 rounded-full" style={{ width: '40%' }}></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </TabsContent>
+                          
+                          <TabsContent value="sampleMenu" className="pt-6">
+                            <h3 className="text-xl font-semibold mb-4">Sample Weekly Menu</h3>
+                            <div className="space-y-6">
+                              {selectedPlan.sampleMeals.map((meal, index) => (
+                                <div key={index} className="bg-secondary/30 rounded-lg overflow-hidden">
+                                  <div className="bg-primary text-white p-3">
+                                    <h4 className="font-semibold">{meal.day}</h4>
+                                  </div>
+                                  <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div className="bg-white p-3 rounded-md shadow-sm">
+                                      <p className="text-sm text-muted-foreground">Breakfast</p>
+                                      <p className="font-medium">{meal.breakfast}</p>
+                                    </div>
+                                    <div className="bg-white p-3 rounded-md shadow-sm">
+                                      <p className="text-sm text-muted-foreground">Lunch</p>
+                                      <p className="font-medium">{meal.lunch}</p>
+                                    </div>
+                                    <div className="bg-white p-3 rounded-md shadow-sm">
+                                      <p className="text-sm text-muted-foreground">Dinner</p>
+                                      <p className="font-medium">{meal.dinner}</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                              <p className="text-center text-muted-foreground mt-4">
+                                This is just a sample of what you might receive. Our menu rotates weekly to ensure variety and seasonal freshness.
+                              </p>
+                            </div>
+                          </TabsContent>
+                          
+                          <TabsContent value="getStarted" className="pt-6">
+                            <div className="space-y-6">
+                              <h3 className="text-xl font-semibold mb-4">How to Subscribe</h3>
+                              
+                              <div className="bg-secondary/30 p-6 rounded-lg">
+                                <div className="flex flex-col gap-6">
+                                  <div className="flex gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-semibold flex-shrink-0">
+                                      1
+                                    </div>
+                                    <div>
+                                      <h4 className="font-semibold mb-1">Download the App</h4>
+                                      <p className="text-muted-foreground mb-3">Get the What The Food app from your app store.</p>
+                                      <div className="flex gap-3">
+                                        <Button className="gap-2">
+                                          <Download className="w-4 h-4" />
+                                          App Store
+                                        </Button>
+                                        <Button className="gap-2">
+                                          <Download className="w-4 h-4" />
+                                          Play Store
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="flex gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-semibold flex-shrink-0">
+                                      2
+                                    </div>
+                                    <div>
+                                      <h4 className="font-semibold mb-1">Create an Account</h4>
+                                      <p className="text-muted-foreground">Sign up and set up your profile with your dietary preferences.</p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="flex gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-semibold flex-shrink-0">
+                                      3
+                                    </div>
+                                    <div>
+                                      <h4 className="font-semibold mb-1">Choose Your Plan</h4>
+                                      <p className="text-muted-foreground">Select the {selectedPlan.title} and customize as needed.</p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="flex gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-semibold flex-shrink-0">
+                                      4
+                                    </div>
+                                    <div>
+                                      <h4 className="font-semibold mb-1">Set Delivery Schedule</h4>
+                                      <p className="text-muted-foreground">Choose your preferred delivery days and times.</p>
+                                    </div>
+                                  </div>
+                                  
+                                  <div className="flex gap-4">
+                                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-semibold flex-shrink-0">
+                                      5
+                                    </div>
+                                    <div>
+                                      <h4 className="font-semibold mb-1">Enjoy Your Meals!</h4>
+                                      <p className="text-muted-foreground">Receive fresh, delicious meals at your doorstep.</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </TabsContent>
+                        </Tabs>
                       </div>
                     </div>
                   </AnimatedSection>
-                ))}
+                </div>
               </div>
             ) : (
               <div className="text-center py-12">
@@ -328,23 +716,58 @@ const MealPlans = () => {
             )}
           </div>
         </section>
+        
+        <section className="py-16 bg-white">
+          <div className="container max-w-7xl mx-auto px-4 sm:px-6">
+            <AnimatedSection>
+              <div className="text-center mb-12">
+                <h2 className="mb-4">Why Choose Our <span className="text-primary">Meal Plans</span>?</h2>
+                <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+                  Our meal plans are designed with your health and convenience in mind. Here's what sets us apart:
+                </p>
+              </div>
+            </AnimatedSection>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {benefits.map((benefit, index) => (
+                <AnimatedSection key={index} delay={index * 100}>
+                  <div className="bg-secondary/30 p-6 rounded-lg h-full">
+                    <div className="bg-primary/10 text-primary rounded-full w-12 h-12 flex items-center justify-center mb-4">
+                      <benefit.icon className="w-6 h-6" />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">{benefit.title}</h3>
+                    <p className="text-muted-foreground">{benefit.description}</p>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
+          </div>
+        </section>
 
         <section className="py-16 bg-accent">
           <div className="container max-w-7xl mx-auto px-4 sm:px-6">
             <AnimatedSection>
               <div className="max-w-3xl mx-auto text-center">
-                <h2 className="mb-6">Can't Find What You're Looking For?</h2>
+                <h2 className="mb-6">Ready to Start Your Healthy Eating Journey?</h2>
                 <p className="text-lg text-muted-foreground mb-8">
-                  Create a fully personalized meal plan with our AI-powered customization tool.
-                  Tailor it to your dietary preferences, health goals, and taste preferences.
+                  Download our app to browse all meal plans, customize your meals, and place your first order.
                 </p>
-                <Button 
-                  size="lg" 
-                  className="button-hover-effect"
-                  onClick={() => navigate('/customize')}
-                >
-                  Create Custom Meal Plan
-                </Button>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button 
+                    size="lg" 
+                    className="button-hover-effect gap-2"
+                  >
+                    <Download className="w-5 h-5" />
+                    Download on App Store
+                  </Button>
+                  <Button 
+                    size="lg" 
+                    className="button-hover-effect gap-2"
+                  >
+                    <Download className="w-5 h-5" />
+                    Get it on Play Store
+                  </Button>
+                </div>
               </div>
             </AnimatedSection>
           </div>
