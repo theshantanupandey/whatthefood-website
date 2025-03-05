@@ -40,7 +40,7 @@ const Customize = () => {
                 <div>
                   <h2 className="mb-6">Why Customize Your Meals?</h2>
                   <p className="text-muted-foreground mb-6">
-                    Everyone's nutritional needs are different. Customizing your meal plan ensures you get exactly what your body needs based on your:
+                    Everyone&apos;s nutritional needs are different. Customizing your meal plan ensures you get exactly what your body needs based on your:
                   </p>
                   <ul className="space-y-4 mb-8">
                     {[
@@ -114,7 +114,7 @@ const Customize = () => {
                 },
                 {
                   title: 'Allergen Exclusions',
-                  description: 'Specify any food allergies or intolerances, and we'll ensure your meals are always safe for you.',
+                  description: 'Specify any food allergies or intolerances, and we\'ll ensure your meals are always safe for you.',
                   icon: AlertCircle
                 }
               ].map((option, idx) => (
