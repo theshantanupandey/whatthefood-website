@@ -9,6 +9,7 @@ import About from "./pages/About";
 import MealPlans from "./pages/MealPlans";
 import Customize from "./pages/Customize";
 import Vendors from "./pages/Vendors";
+import AIDietPlanner from "./pages/AIDietPlanner";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/meal-plans" element={<MealPlans />} />
           <Route path="/customize" element={<Customize />} />
           <Route path="/vendors" element={<Vendors />} />
+          <Route path="/ai-diet-planner" element={<AIDietPlanner />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
