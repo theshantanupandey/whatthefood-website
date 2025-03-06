@@ -38,7 +38,7 @@ const Footer = () => {
           <div className="md:col-span-2">
             <h5 className="font-semibold mb-4 text-sm uppercase tracking-wider">Explore</h5>
             <ul className="space-y-3">
-              {['About Us', 'Meal Plans', 'Customize', 'AI Diet Planner'].map((item) => (
+              {['About', 'Meal Plans', 'Customize', 'AI Diet Planner'].map((item) => (
                 <li key={item}>
                   <Link
                     to={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
