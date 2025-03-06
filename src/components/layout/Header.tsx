@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -18,7 +17,6 @@ const Header = () => {
     { name: 'Vendors', href: '/vendors' },
     { name: 'AI Diet Planner', href: '/ai-diet-planner' },
     { name: 'Blog', href: '/blog' },
-    { name: 'FAQ', href: '/faq' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -36,7 +34,6 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
-    // Close mobile menu when route changes
     setIsMobileMenuOpen(false);
   }, [location]);
 

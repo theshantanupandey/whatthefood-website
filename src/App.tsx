@@ -11,6 +11,7 @@ import Customize from "./pages/Customize";
 import Vendors from "./pages/Vendors";
 import AIDietPlanner from "./pages/AIDietPlanner";
 import Blog from "./pages/Blog";
+import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/vendors" element={<Vendors />} />
           <Route path="/ai-diet-planner" element={<AIDietPlanner />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/contact" element={<Contact />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
