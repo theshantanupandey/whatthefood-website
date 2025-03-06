@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -17,6 +18,7 @@ const Header = () => {
     { name: 'Vendors', href: '/vendors' },
     { name: 'AI Diet Planner', href: '/ai-diet-planner' },
     { name: 'Blog', href: '/blog' },
+    { name: 'FAQ', href: '/faq' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -34,6 +36,7 @@ const Header = () => {
   }, []);
 
   useEffect(() => {
+    // Close mobile menu when route changes
     setIsMobileMenuOpen(false);
   }, [location]);
 
@@ -47,12 +50,14 @@ const Header = () => {
       )}
     >
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+        {/* Logo */}
         <Link to="/" className="flex items-center">
           <span className="text-xl font-display font-bold tracking-tighter">
             What<span className="text-primary">The</span>Food
           </span>
         </Link>
 
+        {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-8">
           {navigation.map((item) => (
             <Link
@@ -70,6 +75,7 @@ const Header = () => {
           ))}
         </nav>
 
+        {/* Mobile Menu Button */}
         <Button
           variant="ghost"
           size="icon"
@@ -83,11 +89,13 @@ const Header = () => {
           )}
         </Button>
 
+        {/* Download App Button (Desktop) */}
         <Button className="hidden lg:flex button-hover-effect">
           Download App
         </Button>
       </div>
 
+      {/* Mobile Navigation */}
       {isMobileMenuOpen && (
         <div className="lg:hidden">
           <div className="fixed inset-0 z-40 bg-white flex flex-col animate-fade-in">
