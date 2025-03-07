@@ -67,8 +67,8 @@ const formSchema = z.object({
   whyPartner: z.string().min(10, { message: 'Please provide some details' }),
   additionalComments: z.string().optional(),
   
-  termsAgreed: z.literal(true, {
-    errorMap: () => ({ message: 'You must accept the terms and conditions' }),
+  termsAgreed: z.boolean().refine(val => val === true, {
+    message: 'You must accept the terms and conditions',
   }),
 });
 
@@ -753,14 +753,14 @@ const VendorApplication = () => {
                           
                           <div className="flex items-center space-x-2">
                             <Checkbox
-                              id="termsAccepted"
-                              checked={form.watch("termsAccepted")}
+                              id="termsAgreed"
+                              checked={form.watch("termsAgreed")}
                               onCheckedChange={(checked) => {
-                                form.setValue("termsAccepted", checked === true);
+                                form.setValue("termsAgreed", checked === true);
                               }}
                             />
                             <label
-                              htmlFor="termsAccepted"
+                              htmlFor="termsAgreed"
                               className="text-sm leading-none"
                             >
                               I agree to the terms and conditions of partnering with What The Food*
