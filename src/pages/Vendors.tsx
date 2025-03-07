@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/layout/Header';
@@ -145,6 +144,10 @@ const Vendors = () => {
     }
   }, [selectedLocation]);
 
+  const handleApplyClick = () => {
+    navigate('/vendor-application');
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -162,7 +165,7 @@ const Vendors = () => {
                   Partner with What The Food to expand your reach and provide healthy, 
                   delicious meals to subscribers in your area.
                 </p>
-                <Button size="lg" className="button-hover-effect">
+                <Button size="lg" className="button-hover-effect" onClick={handleApplyClick}>
                   Apply to Become a Vendor
                 </Button>
               </div>
@@ -366,7 +369,7 @@ const Vendors = () => {
                         </div>
                       ))}
                     </div>
-                    <Button size="lg" className="button-hover-effect">
+                    <Button size="lg" className="button-hover-effect" onClick={handleApplyClick}>
                       Apply to Become a Vendor
                     </Button>
                   </div>

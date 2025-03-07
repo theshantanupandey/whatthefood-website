@@ -9,6 +9,7 @@ import About from "./pages/About";
 import MealPlans from "./pages/MealPlans";
 import Customize from "./pages/Customize";
 import Vendors from "./pages/Vendors";
+import VendorApplication from "./pages/VendorApplication";
 import AIDietPlanner from "./pages/AIDietPlanner";
 import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/meal-plans" element={<MealPlans />} />
           <Route path="/customize" element={<Customize />} />
           <Route path="/vendors" element={<Vendors />} />
+          <Route path="/vendor-application" element={<VendorApplication />} />
           <Route path="/ai-diet-planner" element={<AIDietPlanner />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
