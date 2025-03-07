@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -42,39 +41,32 @@ import {
   ArrowRight,
 } from 'lucide-react';
 
-// Form schema validation
 const formSchema = z.object({
-  // Business Information
   businessName: z.string().min(2, { message: 'Business name is required' }),
   ownerName: z.string().min(2, { message: 'Owner/Manager name is required' }),
   businessType: z.string({ required_error: 'Please select a business type' }),
   registrationNumber: z.string().optional(),
   gstNumber: z.string().optional(),
   
-  // Contact Details
   phone: z.string().min(10, { message: 'Valid phone number is required' }),
   email: z.string().email({ message: 'Valid email is required' }),
   address: z.string().min(5, { message: 'Business address is required' }),
   cityState: z.string({ required_error: 'Please select your city and state' }),
   
-  // Kitchen & Service Details
   mealsPerDay: z.number().min(1, { message: 'Please enter a valid number' }),
   cuisines: z.array(z.string()).min(1, { message: 'Select at least one cuisine' }),
   vegetarianOptions: z.boolean(),
   fssaiStandards: z.boolean(),
   packagingOption: z.string({ required_error: 'Please select an option' }),
   
-  // Availability & Pricing
   mealTypes: z.array(z.string()).min(1, { message: 'Select at least one meal type' }),
   priceRange: z.string({ required_error: 'Please select a price range' }),
   customizationWilling: z.boolean(),
   existingDelivery: z.boolean(),
   
-  // Additional Information
   whyPartner: z.string().min(10, { message: 'Please provide some details' }),
   additionalComments: z.string().optional(),
   
-  // Terms & Conditions
   termsAgreed: z.literal(true, {
     errorMap: () => ({ message: 'You must accept the terms and conditions' }),
   }),
@@ -82,7 +74,6 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-// Sample city/state options
 const cityStateOptions = [
   'New Delhi, Delhi',
   'Mumbai, Maharashtra',
@@ -96,7 +87,6 @@ const cityStateOptions = [
   'Lucknow, Uttar Pradesh',
 ];
 
-// Cuisine options
 const cuisineOptions = [
   'Indian',
   'Continental',
@@ -111,7 +101,6 @@ const cuisineOptions = [
   'Paleo',
 ];
 
-// Meal types
 const mealTypeOptions = [
   { id: 'breakfast', label: 'Breakfast' },
   { id: 'lunch', label: 'Lunch' },
@@ -152,22 +141,18 @@ const VendorApplication = () => {
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
     
-    // Simulate API call
     setTimeout(() => {
       console.log('Form data submitted:', data);
       setIsSubmitting(false);
       
-      // Show success toast
       toast.success('Application submitted successfully!', {
         description: 'We will contact you shortly to discuss the next steps.',
       });
       
-      // Redirect to vendors page after submission
       navigate('/vendors');
     }, 1500);
   };
   
-  // Multi-step form navigation
   const totalSteps = 7;
   
   const nextFormStep = () => {
@@ -211,7 +196,6 @@ const VendorApplication = () => {
               </p>
             </div>
             
-            {/* Progress indicator */}
             <div className="mb-8">
               <div className="flex justify-between items-center">
                 {Array.from({ length: totalSteps }).map((_, index) => (
@@ -255,7 +239,6 @@ const VendorApplication = () => {
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <Card className="border-none shadow-md">
                   <CardContent className="pt-6">
-                    {/* Step 1: Business Information */}
                     {formStep === 0 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
@@ -346,7 +329,6 @@ const VendorApplication = () => {
                       </div>
                     )}
                     
-                    {/* Step 2: Contact Details */}
                     {formStep === 1 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
@@ -433,7 +415,6 @@ const VendorApplication = () => {
                       </div>
                     )}
                     
-                    {/* Step 3: Kitchen & Service Details */}
                     {formStep === 2 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
@@ -546,7 +527,6 @@ const VendorApplication = () => {
                       </div>
                     )}
                     
-                    {/* Step 4: Availability & Pricing */}
                     {formStep === 3 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
@@ -643,7 +623,6 @@ const VendorApplication = () => {
                       </div>
                     )}
                     
-                    {/* Step 5: Documents Upload */}
                     {formStep === 4 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
@@ -707,7 +686,6 @@ const VendorApplication = () => {
                       </div>
                     )}
                     
-                    {/* Step 6: Additional Information */}
                     {formStep === 5 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
@@ -748,7 +726,6 @@ const VendorApplication = () => {
                       </div>
                     )}
                     
-                    {/* Step 7: Terms & Conditions */}
                     {formStep === 6 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
