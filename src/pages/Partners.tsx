@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -13,7 +12,10 @@ import {
   Globe, 
   Leaf, 
   MessageSquare, 
-  PlusCircle
+  PlusCircle,
+  Mail,
+  Phone,
+  Linkedin
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -124,7 +126,7 @@ const Partners = () => {
     {
       name: 'Michael Chen',
       company: 'FitLife Nutrition',
-      quote: 'The collaborative marketing campaigns we've run with What The Food have generated exceptional engagement. Their team is professional and truly understands how to showcase partner brands effectively.',
+      quote: "The collaborative marketing campaigns we've run with What The Food have generated exceptional engagement. Their team is professional and truly understands how to showcase partner brands effectively.",
     },
   ];
 
@@ -710,3 +712,4 @@ const Partners = () => {
 };
 
 export default Partners;
+
