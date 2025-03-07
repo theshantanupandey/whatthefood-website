@@ -38,7 +38,7 @@ const Footer = () => {
           <div className="md:col-span-2">
             <h5 className="font-semibold mb-4 text-sm uppercase tracking-wider">Explore</h5>
             <ul className="space-y-3">
-              {['About', 'Meal Plans', 'Customize', 'AI Diet Planner'].map((item) => (
+              {['About', 'Meal Plans', 'Customize', 'AI Diet Planner', 'FAQ'].map((item) => (
                 <li key={item}>
                   <Link
                     to={`/${item.toLowerCase().replace(/\s+/g, '-')}`}
@@ -106,6 +106,9 @@ const Footer = () => {
             </Link>
             <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               Terms of Service
+            </Link>
+            <Link to="/faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              FAQ
             </Link>
             <Link to="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               Contact Us
