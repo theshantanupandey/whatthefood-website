@@ -472,9 +472,9 @@ const VendorApplication = () => {
                           <div className="flex items-center space-x-2">
                             <Checkbox
                               id="vegetarianOptions"
-                              checked={form.getValues('vegetarianOptions')}
+                              checked={form.watch("vegetarianOptions")}
                               onCheckedChange={(checked) => {
-                                form.setValue('vegetarianOptions', checked === true);
+                                form.setValue("vegetarianOptions", checked === true);
                               }}
                             />
                             <label
@@ -753,14 +753,14 @@ const VendorApplication = () => {
                           
                           <div className="flex items-center space-x-2">
                             <Checkbox
-                              id="termsAgreed"
-                              checked={form.getValues('termsAgreed')}
+                              id="termsAccepted"
+                              checked={form.watch("termsAccepted")}
                               onCheckedChange={(checked) => {
-                                form.setValue('termsAgreed', checked === true);
+                                form.setValue("termsAccepted", checked === true);
                               }}
                             />
                             <label
-                              htmlFor="termsAgreed"
+                              htmlFor="termsAccepted"
                               className="text-sm leading-none"
                             >
                               I agree to the terms and conditions of partnering with What The Food*
