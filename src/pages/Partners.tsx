@@ -18,6 +18,7 @@ import {
   Linkedin
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { submitPartnerApplication } from '@/services/partnerService';
 
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -48,7 +49,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-// Define form schema
 const formSchema = z.object({
   brandName: z.string().min(2, { message: 'Brand name is required' }),
   website: z.string().url({ message: 'Please enter a valid website URL' }),
@@ -69,7 +69,6 @@ const Partners = () => {
   const { toast } = useToast();
   const [file, setFile] = useState<File | null>(null);
   
-  // Initialize form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -91,22 +90,40 @@ const Partners = () => {
     }
   };
 
-  const onSubmit = (data: FormValues) => {
-    // Handle form submission
-    console.log('Form Data:', data);
-    console.log('Uploaded File:', file);
-    
-    toast({
-      title: "Application Submitted!",
-      description: "We've received your partnership application and will be in touch soon.",
-    });
-    
-    // Reset form
-    form.reset();
-    setFile(null);
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const formData = {
+        ...data,
+        brandDeck: file || undefined
+      };
+      
+      const response = await submitPartnerApplication(formData);
+      
+      if (response.success) {
+        toast({
+          title: "Application Submitted!",
+          description: "We've received your partnership application and will be in touch soon.",
+        });
+        
+        form.reset();
+        setFile(null);
+      } else {
+        toast({
+          title: "Submission Failed",
+          description: response.error || "There was an error submitting your application. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting partnership application:", error);
+      toast({
+        title: "Submission Error",
+        description: "There was an unexpected error. Please try again later.",
+        variant: "destructive",
+      });
+    }
   };
 
-  // Sample data for current partners
   const partners = [
     { name: 'Organic Harvest', logo: '/placeholder.svg' },
     { name: 'FitLife Nutrition', logo: '/placeholder.svg' },
@@ -116,7 +133,6 @@ const Partners = () => {
     { name: 'EcoPackage', logo: '/placeholder.svg' },
   ];
 
-  // Sample testimonials
   const testimonials = [
     {
       name: 'Sarah Johnson',
@@ -130,7 +146,6 @@ const Partners = () => {
     },
   ];
 
-  // Sample success story
   const successStory = {
     company: 'Green Kitchen',
     title: 'How Green Kitchen Increased Sales by 35%',
@@ -142,7 +157,6 @@ const Partners = () => {
     <>
       <Header />
       
-      {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-primary/10 to-primary/5 pt-24 pb-16">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -168,7 +182,6 @@ const Partners = () => {
         </div>
       </section>
       
-      {/* Why Partner with Us */}
       <section className="py-16 bg-background">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
@@ -242,7 +255,6 @@ const Partners = () => {
         </div>
       </section>
       
-      {/* Current Partners */}
       <section className="py-16 bg-secondary">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
@@ -288,7 +300,6 @@ const Partners = () => {
         </div>
       </section>
       
-      {/* How We Collaborate */}
       <section className="py-16 bg-background">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
@@ -338,7 +349,6 @@ const Partners = () => {
         </div>
       </section>
       
-      {/* Success Story */}
       <section className="py-16 bg-primary/5">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
@@ -376,7 +386,6 @@ const Partners = () => {
         </div>
       </section>
       
-      {/* Partner Application Form */}
       <section id="partner-form" className="py-16 bg-background">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
@@ -614,7 +623,6 @@ const Partners = () => {
         </div>
       </section>
       
-      {/* FAQs */}
       <section className="py-16 bg-secondary">
         <div className="container max-w-4xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
@@ -656,7 +664,6 @@ const Partners = () => {
         </div>
       </section>
       
-      {/* Contact Section */}
       <section className="py-16 bg-background">
         <div className="container max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-12">
@@ -712,4 +719,3 @@ const Partners = () => {
 };
 
 export default Partners;
-

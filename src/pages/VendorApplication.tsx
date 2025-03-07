@@ -40,6 +40,7 @@ import {
   Upload,
   ArrowRight,
 } from 'lucide-react';
+import { submitVendorApplication } from '@/services/vendorService';
 
 const formSchema = z.object({
   businessName: z.string().min(2, { message: 'Business name is required' }),
@@ -111,9 +112,11 @@ const mealTypeOptions = [
 const VendorApplication = () => {
   const navigate = useNavigate();
   const [formStep, setFormStep] = useState(0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
   const [selectedMealTypes, setSelectedMealTypes] = useState<string[]>([]);
+  const [kitchenPhotos, setKitchenPhotos] = useState<File[]>([]);
+  const [foodPhotos, setFoodPhotos] = useState<File[]>([]);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -138,19 +141,43 @@ const VendorApplication = () => {
     },
   });
   
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setSubmitting(true);
     
-    setTimeout(() => {
-      console.log('Form data submitted:', data);
-      setIsSubmitting(false);
+    try {
+      const formData = {
+        ...data,
+        kitchenPhotos: kitchenPhotos,
+        foodPhotos: foodPhotos
+      };
       
-      toast.success('Application submitted successfully!', {
-        description: 'We will contact you shortly to discuss the next steps.',
+      const response = await submitVendorApplication(formData);
+      
+      if (response.success) {
+        toast({
+          title: "Application Submitted!",
+          description: "We've received your vendor application and will be in touch soon.",
+        });
+        form.reset();
+        setKitchenPhotos([]);
+        setFoodPhotos([]);
+      } else {
+        toast({
+          title: "Submission Failed",
+          description: response.error || "There was an error submitting your application. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Error submitting vendor application:", error);
+      toast({
+        title: "Submission Error",
+        description: "There was an unexpected error. Please try again later.",
+        variant: "destructive",
       });
-      
-      navigate('/vendors');
-    }, 1500);
+    } finally {
+      setSubmitting(false);
+    }
   };
   
   const totalSteps = 7;
