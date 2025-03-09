@@ -15,9 +15,14 @@ interface AnimatedSectionProps {
     'slide-up' | 
     'rotate-in' | 
     'bounce-in' | 
-    'flip-in';
+    'flip-in' |
+    'slide-down' |
+    'zoom-in' |
+    'pop-in' |
+    'float-in' |
+    'pulse-in';
   threshold?: number;
-  duration?: 'fast' | 'normal' | 'slow';
+  duration?: 'fast' | 'normal' | 'slow' | 'very-slow';
 }
 
 const AnimatedSection = ({
@@ -35,6 +40,7 @@ const AnimatedSection = ({
     switch (duration) {
       case 'fast': return 'duration-500';
       case 'slow': return 'duration-1000';
+      case 'very-slow': return 'duration-1500';
       default: return 'duration-700';
     }
   };
@@ -78,9 +84,14 @@ const AnimatedSection = ({
       case 'blur-in': return 'animate-blur-in';
       case 'scale-in': return 'animate-scale-in';
       case 'slide-up': return 'translate-y-16 animate-fade-in';
+      case 'slide-down': return '-translate-y-16 animate-fade-in';
       case 'rotate-in': return 'rotate-6 animate-fade-in';
       case 'bounce-in': return 'scale-75 animate-scale-in';
       case 'flip-in': return 'rotate-x-90 animate-fade-in';
+      case 'zoom-in': return 'scale-50 animate-scale-in';
+      case 'pop-in': return 'scale-90 animate-scale-in';
+      case 'float-in': return 'translate-y-8 animate-fade-in';
+      case 'pulse-in': return 'scale-95 animate-scale-in';
       default: return 'animate-fade-in';
     }
   };

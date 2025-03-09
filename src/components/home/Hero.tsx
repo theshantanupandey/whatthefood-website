@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, ArrowDown } from 'lucide-react';
+import { ChevronRight, ArrowDown, Sparkles } from 'lucide-react';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 
 const Hero = () => {
@@ -28,50 +28,57 @@ const Hero = () => {
       {/* Animated Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/80 to-background/40 animate-pulse-subtle" />
       
-      {/* Floating decorative elements */}
-      <div className="absolute top-[20%] left-[10%] w-32 h-32 rounded-full bg-primary/10 mix-blend-multiply animate-float blur-2xl" />
-      <div className="absolute bottom-[10%] right-[15%] w-48 h-48 rounded-full bg-blue-500/10 mix-blend-multiply animate-float blur-2xl" style={{ animationDelay: '2s' }} />
+      {/* Floating decorative elements with improved animations */}
+      <div className="absolute top-[20%] left-[10%] w-32 h-32 rounded-full bg-primary/10 mix-blend-multiply animate-float blur-3xl" />
+      <div className="absolute bottom-[10%] right-[15%] w-48 h-48 rounded-full bg-blue-500/10 mix-blend-multiply animate-float blur-3xl" style={{ animationDelay: '2s' }} />
+      <div className="absolute top-[40%] right-[25%] w-24 h-24 rounded-full bg-yellow-500/10 mix-blend-multiply animate-float blur-2xl" style={{ animationDelay: '3s' }} />
+      <div className="absolute bottom-[30%] left-[20%] w-36 h-36 rounded-full bg-purple-500/10 mix-blend-multiply animate-float blur-2xl" style={{ animationDelay: '4s' }} />
       
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <AnimatedSection animation="fade-in-left" duration="slow">
             <div className="pt-8 pb-16">
-              <div className="badge badge-primary mb-5">Meal Delivery Service</div>
+              <div className="badge badge-primary mb-5 animate-pulse-glow">Meal Delivery Service</div>
               <h1 className="mb-6">
-                Healthy Meals,{' '}
+                <span className="block mb-2">Healthy Meals,</span>{' '}
                 <span className="relative">
-                  <span className="relative z-10 gradient-text">Delivered Daily!</span>
-                  <span className="absolute bottom-3 left-0 w-full h-3 bg-primary/30 -z-10 transform skew-x-12 animate-pulse-subtle" />
+                  <span className="relative z-10 gradient-text font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">Delivered Daily!</span>
+                  <span className="absolute bottom-2 left-0 w-full h-3 bg-primary/30 -z-10 transform skew-x-12 animate-pulse-subtle" />
                 </span>
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-md">
+              <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-md glass-dark p-4 rounded-lg">
                 Fresh, nutritious, and hassle-free meal plans for everyone. Experience the convenience of healthy eating without the prep work.
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 mb-10">
                 <Button 
                   size="lg" 
-                  className="button-hover-effect bg-gradient-to-r from-primary to-primary/90 shadow-glow group"
-                  onClick={() => navigate('/meal-plans')}
+                  className="button-hover-effect group relative overflow-hidden"
                 >
-                  Explore Meal Plans
-                  <ChevronRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-primary to-primary/90 transition-all duration-300"></span>
+                  <span className="relative flex items-center z-10 text-white">
+                    Explore Meal Plans
+                    <ChevronRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                  </span>
+                  <span className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-primary/90 to-primary shadow-glow opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                  <Sparkles className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-20 w-20 text-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </Button>
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="button-hover-effect glass-effect hover:bg-white/30 transition-all duration-300"
+                  className="button-hover-effect glass-effect hover:bg-white/30 relative overflow-hidden transition-all duration-300 border border-white/20 backdrop-blur-sm"
                 >
-                  Download App
+                  <span className="absolute inset-0 w-full h-full bg-white/5 rounded-md"></span>
+                  <span className="relative z-10">Download App</span>
                 </Button>
               </div>
               
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-3 glass p-4 rounded-lg shadow-sm animate-fade-in">
                 <div className="flex -space-x-2">
                   {[1, 2, 3].map((idx) => (
                     <div 
                       key={idx}
-                      className="w-10 h-10 rounded-full border-2 border-background overflow-hidden animate-fade-in"
+                      className="w-10 h-10 rounded-full border-2 border-background overflow-hidden animate-fade-in hover-scale"
                       style={{ animationDelay: `${idx * 200}ms` }}
                     >
                       <img 
@@ -87,7 +94,7 @@ const Hero = () => {
                     {[1, 2, 3, 4, 5].map((star, idx) => (
                       <svg 
                         key={star} 
-                        className="w-4 h-4 text-yellow-500 animate-scale-in" 
+                        className="w-4 h-4 text-yellow-500 animate-scale-in animate-pulse-glow" 
                         style={{ animationDelay: `${idx * 100}ms` }}
                         fill="currentColor" 
                         viewBox="0 0 20 20"
@@ -104,10 +111,10 @@ const Hero = () => {
             </div>
           </AnimatedSection>
           
-          {/* Right side floating cards */}
+          {/* Right side floating cards with glassmorphism */}
           <div className="hidden lg:flex relative h-[500px]">
             <AnimatedSection animation="fade-in" delay={400}>
-              <div className="absolute top-10 right-0 w-64 glass-card rounded-2xl p-4 hover-lift transition-all">
+              <div className="absolute top-10 right-0 w-64 glass-card rounded-2xl p-4 hover-lift transition-all backdrop-blur-md bg-white/60 border border-white/30 shadow-lg animate-float" style={{ animationDelay: '1s' }}>
                 <div className="overflow-hidden rounded-lg mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
@@ -121,7 +128,7 @@ const Hero = () => {
             </AnimatedSection>
             
             <AnimatedSection animation="fade-in" delay={700}>
-              <div className="absolute bottom-10 left-0 w-64 glass-card rounded-2xl p-4 hover-lift transition-all">
+              <div className="absolute bottom-10 left-0 w-64 glass-card rounded-2xl p-4 hover-lift transition-all backdrop-blur-md bg-white/70 border border-white/30 shadow-lg animate-float" style={{ animationDelay: '2s' }}>
                 <div className="overflow-hidden rounded-lg mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
@@ -133,14 +140,30 @@ const Hero = () => {
                 <p className="text-sm text-muted-foreground">Locally sourced and delivered fresh to your door</p>
               </div>
             </AnimatedSection>
+            
+            <AnimatedSection animation="fade-in" delay={1000}>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 glass-intense rounded-2xl p-4 hover-lift transition-all backdrop-blur-xl border border-white/50 shadow-xl animate-float" style={{ animationDelay: '3s' }}>
+                <div className="overflow-hidden rounded-lg mb-4">
+                  <img 
+                    src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                    alt="Meal variety"
+                    className="w-full h-40 object-cover transition-transform duration-700 hover:scale-110" 
+                  />
+                </div>
+                <h4 className="font-medium mb-1">Endless Variety</h4>
+                <p className="text-sm text-muted-foreground">New menus weekly so you never get bored</p>
+              </div>
+            </AnimatedSection>
           </div>
         </div>
       </div>
       
-      {/* Scroll Down Indicator */}
+      {/* Scroll Down Indicator with improved animation */}
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
-        <p className="text-sm text-muted-foreground mb-2">Scroll Down</p>
-        <ArrowDown className="w-5 h-5 text-muted-foreground" />
+        <p className="text-sm text-muted-foreground mb-2 glass-dark px-3 py-1 rounded-full">Scroll Down</p>
+        <div className="glass-dark p-2 rounded-full animate-pulse-glow">
+          <ArrowDown className="w-5 h-5 text-primary" />
+        </div>
       </div>
     </section>
   );

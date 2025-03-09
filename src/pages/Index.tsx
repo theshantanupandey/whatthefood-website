@@ -11,41 +11,6 @@ import VendorCTA from '@/components/home/VendorCTA';
 const Index = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-    
-    // Initialize scroll reveal animation
-    const scrollElements = document.querySelectorAll('.scroll-reveal');
-    const elementInView = (el: Element, dividend = 1) => {
-      const elementTop = el.getBoundingClientRect().top;
-      return (
-        elementTop <=
-        (window.innerHeight || document.documentElement.clientHeight) / dividend
-      );
-    };
-
-    const displayScrollElement = (element: Element) => {
-      element.classList.add('revealed');
-    };
-
-    const hideScrollElement = (element: Element) => {
-      element.classList.remove('revealed');
-    };
-
-    const handleScrollAnimation = () => {
-      scrollElements.forEach((el) => {
-        if (elementInView(el, 1.25)) {
-          displayScrollElement(el);
-        } else {
-          hideScrollElement(el);
-        }
-      });
-    };
-
-    window.addEventListener('scroll', handleScrollAnimation);
-    handleScrollAnimation();
-
-    return () => {
-      window.removeEventListener('scroll', handleScrollAnimation);
-    };
   }, []);
 
   return (
