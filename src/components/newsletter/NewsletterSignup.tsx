@@ -72,15 +72,15 @@ export function NewsletterSignup({
   };
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Mail className="h-5 w-5" />
+    <div className={className}>
+      <div className="text-center mb-6">
+        <h2 className="text-3xl font-bold flex items-center justify-center gap-2 mb-2">
+          <Mail className="h-6 w-6" />
           {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="mb-4 text-muted-foreground">{description}</p>
+        </h2>
+        <p className="text-muted-foreground">{description}</p>
+      </div>
+      <div className="max-w-md mx-auto">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-2">
             <FormField
@@ -93,6 +93,7 @@ export function NewsletterSignup({
                       placeholder="Enter your email" 
                       type="email" 
                       {...field} 
+                      className="backdrop-blur-sm bg-white/30 border-white/20"
                     />
                   </FormControl>
                   <FormMessage />
@@ -102,13 +103,14 @@ export function NewsletterSignup({
             <Button 
               type="submit" 
               disabled={isSubmitting}
+              className="button-hover-effect"
             >
               {isSubmitting ? "Subscribing..." : "Subscribe"}
             </Button>
           </form>
         </Form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
 

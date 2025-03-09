@@ -16,7 +16,7 @@ const Hero = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
+    <section className="relative h-screen flex items-center overflow-hidden">
       {/* Background Image with Blur In Effect */}
       <div 
         className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
@@ -37,8 +37,8 @@ const Hero = () => {
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <AnimatedSection animation="fade-in-left" duration="slow">
-            <div className="pt-8 pb-16">
-              <div className="badge badge-primary mb-5 animate-pulse-glow">Meal Delivery Service</div>
+            <div>
+              <div className="inline-block bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-medium mb-5 animate-pulse-glow">Meal Delivery Service</div>
               <h1 className="mb-6">
                 <span className="block mb-2">Healthy Meals,</span>{' '}
                 <span className="relative">
@@ -46,7 +46,7 @@ const Hero = () => {
                   <span className="absolute bottom-2 left-0 w-full h-3 bg-primary/30 -z-10 transform skew-x-12 animate-pulse-subtle" />
                 </span>
               </h1>
-              <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-md glass-dark p-4 rounded-lg">
+              <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-md">
                 Fresh, nutritious, and hassle-free meal plans for everyone. Experience the convenience of healthy eating without the prep work.
               </p>
               
@@ -66,14 +66,14 @@ const Hero = () => {
                 <Button 
                   size="lg" 
                   variant="outline" 
-                  className="button-hover-effect glass-effect hover:bg-white/30 relative overflow-hidden transition-all duration-300 border border-white/20 backdrop-blur-sm"
+                  className="button-hover-effect hover:bg-white/30 relative overflow-hidden transition-all duration-300 border border-white/20 backdrop-blur-sm"
                 >
                   <span className="absolute inset-0 w-full h-full bg-white/5 rounded-md"></span>
                   <span className="relative z-10">Download App</span>
                 </Button>
               </div>
               
-              <div className="flex items-center space-x-3 glass p-4 rounded-lg shadow-sm animate-fade-in">
+              <div className="flex items-center space-x-3 mb-4">
                 <div className="flex -space-x-2">
                   {[1, 2, 3].map((idx) => (
                     <div 
@@ -160,8 +160,8 @@ const Hero = () => {
       
       {/* Scroll Down Indicator with improved animation */}
       <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
-        <p className="text-sm text-muted-foreground mb-2 glass-dark px-3 py-1 rounded-full">Scroll Down</p>
-        <div className="glass-dark p-2 rounded-full animate-pulse-glow">
+        <p className="text-sm text-muted-foreground mb-2">Scroll Down</p>
+        <div className="bg-primary/10 p-2 rounded-full animate-pulse-glow">
           <ArrowDown className="w-5 h-5 text-primary" />
         </div>
       </div>

@@ -7,6 +7,7 @@ import MealPlans from '@/components/home/MealPlans';
 import HowItWorks from '@/components/home/HowItWorks';
 import Testimonials from '@/components/home/Testimonials';
 import VendorCTA from '@/components/home/VendorCTA';
+import NewsletterSignup from '@/components/newsletter/NewsletterSignup';
 
 const Index = () => {
   useEffect(() => {
@@ -16,12 +17,25 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow pt-16">
+      <main className="flex-grow">
         <Hero />
-        <MealPlans />
-        <HowItWorks />
-        <Testimonials />
-        <VendorCTA />
+        <div className="py-16">
+          <MealPlans />
+        </div>
+        <div className="py-16 bg-secondary/30">
+          <HowItWorks />
+        </div>
+        <div className="py-16">
+          <Testimonials />
+        </div>
+        <div className="py-16 bg-secondary/30">
+          <div className="container max-w-6xl mx-auto px-4">
+            <NewsletterSignup className="glass border-none shadow-none bg-transparent" />
+          </div>
+        </div>
+        <div className="py-16">
+          <VendorCTA />
+        </div>
       </main>
       <Footer />
     </div>
