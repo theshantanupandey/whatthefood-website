@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Mail } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -73,14 +72,14 @@ export function NewsletterSignup({
 
   return (
     <div className={className}>
-      <div className="text-center mb-6">
-        <h2 className="text-3xl font-bold flex items-center justify-center gap-2 mb-2">
-          <Mail className="h-6 w-6" />
+      <div className="mb-6">
+        <h2 className="text-xl font-bold flex items-center gap-2 mb-2">
+          <Mail className="h-5 w-5" />
           {title}
         </h2>
-        <p className="text-muted-foreground">{description}</p>
+        <p className="text-sm text-muted-foreground">{description}</p>
       </div>
-      <div className="max-w-md mx-auto">
+      <div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-2">
             <FormField
@@ -93,7 +92,7 @@ export function NewsletterSignup({
                       placeholder="Enter your email" 
                       type="email" 
                       {...field} 
-                      className="backdrop-blur-sm bg-white/30 border-white/20"
+                      className="bg-background/5 border-border/30 text-foreground placeholder:text-muted-foreground/70"
                     />
                   </FormControl>
                   <FormMessage />
@@ -103,7 +102,8 @@ export function NewsletterSignup({
             <Button 
               type="submit" 
               disabled={isSubmitting}
-              className="button-hover-effect"
+              size="sm"
+              className="whitespace-nowrap"
             >
               {isSubmitting ? "Subscribing..." : "Subscribe"}
             </Button>

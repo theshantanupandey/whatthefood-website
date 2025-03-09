@@ -35,8 +35,8 @@ const Hero = () => {
       <div className="absolute bottom-[30%] left-[20%] w-36 h-36 rounded-full bg-purple-500/10 mix-blend-multiply animate-float blur-2xl" style={{ animationDelay: '4s' }} />
       
       <div className="container max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <AnimatedSection animation="fade-in-left" duration="slow">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <AnimatedSection animation="fade-in-left" duration="slow" className="lg:col-span-5">
             <div>
               <div className="inline-block bg-primary/10 text-primary rounded-full px-3 py-1 text-xs font-medium mb-5 animate-pulse-glow">Meal Delivery Service</div>
               <h1 className="mb-6">
@@ -111,10 +111,10 @@ const Hero = () => {
             </div>
           </AnimatedSection>
           
-          {/* Right side floating cards with glassmorphism */}
-          <div className="hidden lg:flex relative h-[500px]">
+          {/* Right side floating cards - adjusted for better position */}
+          <div className="hidden lg:flex lg:col-span-7 relative h-[500px]">
             <AnimatedSection animation="fade-in" delay={400}>
-              <div className="absolute top-10 right-0 w-64 glass-card rounded-2xl p-4 hover-lift transition-all backdrop-blur-md bg-white/60 border border-white/30 shadow-lg animate-float" style={{ animationDelay: '1s' }}>
+              <div className="absolute top-10 right-10 w-64 glass-card rounded-2xl p-4 hover-lift transition-all backdrop-blur-md bg-white/60 border border-white/30 shadow-lg animate-float" style={{ animationDelay: '1s' }}>
                 <div className="overflow-hidden rounded-lg mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
@@ -128,7 +128,7 @@ const Hero = () => {
             </AnimatedSection>
             
             <AnimatedSection animation="fade-in" delay={700}>
-              <div className="absolute bottom-10 left-0 w-64 glass-card rounded-2xl p-4 hover-lift transition-all backdrop-blur-md bg-white/70 border border-white/30 shadow-lg animate-float" style={{ animationDelay: '2s' }}>
+              <div className="absolute bottom-20 right-32 w-64 glass-card rounded-2xl p-4 hover-lift transition-all backdrop-blur-md bg-white/70 border border-white/30 shadow-lg animate-float" style={{ animationDelay: '2s' }}>
                 <div className="overflow-hidden rounded-lg mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
@@ -142,7 +142,7 @@ const Hero = () => {
             </AnimatedSection>
             
             <AnimatedSection animation="fade-in" delay={1000}>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 glass-intense rounded-2xl p-4 hover-lift transition-all backdrop-blur-xl border border-white/50 shadow-xl animate-float" style={{ animationDelay: '3s' }}>
+              <div className="absolute top-1/2 -translate-y-1/2 right-0 w-64 glass-intense rounded-2xl p-4 hover-lift transition-all backdrop-blur-xl border border-white/50 shadow-xl animate-float" style={{ animationDelay: '3s' }}>
                 <div className="overflow-hidden rounded-lg mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
