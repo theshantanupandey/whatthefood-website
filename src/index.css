@@ -76,6 +76,7 @@
   
   body {
     @apply bg-background text-foreground tracking-tight;
+    overflow-x: hidden;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -119,10 +120,47 @@
   .glass-card {
     @apply bg-white/70 backdrop-blur-lg border border-white/20 shadow-sm;
   }
-
+  
+  .glass-effect {
+    @apply bg-white/20 backdrop-blur-lg border border-white/20 shadow-sm;
+  }
+  
+  .glass-deep {
+    @apply bg-white/80 backdrop-blur-xl border border-white/40 shadow-md;
+  }
+  
+  .glass-dark {
+    @apply bg-foreground/10 backdrop-blur-lg border border-foreground/5 shadow-md;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
+  }
+  
+  .gradient-border {
+    @apply border border-transparent bg-gradient-to-r from-primary/20 to-primary/10 bg-clip-border;
+  }
+  
   .link-underline {
     @apply relative after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full;
   }
+  
+  .shadow-glow {
+    @apply shadow-lg shadow-primary/20;
+  }
+  
+  .animated-border {
+    @apply relative after:absolute after:inset-0 after:z-10 after:border after:border-white/20 after:opacity-0 hover:after:opacity-100 after:transition-all after:duration-500;
+  }
+  
+  .shimmer {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent;
+  }
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
 }
 
 .scroll-reveal {
@@ -155,4 +193,32 @@
 .page-transition-exit-active {
   opacity: 0;
   transition: opacity 300ms;
+}
+
+/* Fancy hover effects for cards */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.25);
 }
