@@ -5,8 +5,8 @@ export interface VendorFormData {
   businessName: string;
   ownerName: string;
   businessType: string;
-  registrationNumber: string;
-  gstNumber: string;
+  registrationNumber?: string;
+  gstNumber?: string;
   phone: string;
   email: string;
   address: string;
@@ -21,13 +21,13 @@ export interface VendorFormData {
   foodPhotos?: File[];
   additionalInfo?: string;
   termsAgreed: boolean;
-  // Add missing fields from the form that aren't in the interface
-  packagingOption?: string;
-  priceRange?: string;
-  customizationWilling?: boolean;
-  existingDelivery?: boolean;
-  whyPartner?: string;
-  fssaiStandards?: boolean;
+  packagingOption: string;
+  priceRange: string;
+  customizationWilling: boolean;
+  existingDelivery: boolean;
+  whyPartner: string;
+  fssaiStandards: boolean;
+  additionalComments?: string;
 }
 
 export async function submitVendorApplication(data: VendorFormData) {

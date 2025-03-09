@@ -6,6 +6,7 @@ import * as z from 'zod';
 import { toast } from 'sonner';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import AnimatedSection from '@/components/ui/AnimatedSection';
 import { Form } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -109,11 +110,6 @@ const mealTypeOptions = [
   { id: 'allday', label: 'All-day' },
 ];
 
-type VendorFormData = FormValues & {
-  deliveryOptions: string[];
-  healthCertifications: string[];
-};
-
 const VendorApplication = () => {
   const navigate = useNavigate();
   const [formStep, setFormStep] = useState(0);
@@ -169,6 +165,7 @@ const VendorApplication = () => {
         kitchenPhotos: kitchenPhotos,
         foodPhotos: foodPhotos,
         additionalInfo: data.additionalComments,
+        additionalComments: data.additionalComments,
         termsAgreed: data.termsAgreed,
         packagingOption: data.packagingOption,
         priceRange: data.priceRange,
@@ -229,9 +226,10 @@ const VendorApplication = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className="flex-grow pt-24 pb-16">
+      <main className="flex-grow pt-24 pb-16 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-background/70 -z-10"></div>
         <div className="container max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="mx-auto max-w-3xl">
+          <AnimatedSection animation="fade-in-left" className="mx-auto max-w-3xl">
             <div className="text-center mb-8">
               <h1 className="mb-4">Vendor Application</h1>
               <p className="text-muted-foreground">
@@ -239,7 +237,7 @@ const VendorApplication = () => {
               </p>
             </div>
             
-            <div className="mb-8">
+            <AnimatedSection animation="fade-in" delay={300} className="mb-8">
               <div className="flex justify-between items-center">
                 {Array.from({ length: totalSteps }).map((_, index) => (
                   <div key={index} className="flex flex-col items-center">
@@ -276,11 +274,11 @@ const VendorApplication = () => {
                   style={{ width: `${(formStep / (totalSteps - 1)) * 100}%` }}
                 />
               </div>
-            </div>
+            </AnimatedSection>
             
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-                <Card className="border-none shadow-md">
+                <Card className="border-none shadow-md glass">
                   <CardContent className="pt-6">
                     {formStep === 0 && (
                       <div className="space-y-6">
@@ -851,7 +849,7 @@ const VendorApplication = () => {
                 </Card>
               </form>
             </Form>
-          </div>
+          </AnimatedSection>
         </div>
       </main>
       <Footer />
