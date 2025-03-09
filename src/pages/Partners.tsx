@@ -18,7 +18,7 @@ import {
   Linkedin
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { submitPartnerApplication } from '@/services/partnerService';
+import { submitPartnerApplication, PartnerFormData } from '@/services/partnerService';
 
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -93,7 +93,15 @@ const Partners = () => {
   const onSubmit = async (data: FormValues) => {
     try {
       const formData: PartnerFormData = {
-        ...data,
+        brandName: data.brandName,
+        website: data.website,
+        industryType: data.industryType,
+        contactName: data.contactName,
+        email: data.email,
+        phone: data.phone,
+        collaborationTypes: data.collaborationTypes,
+        additionalInfo: data.additionalInfo,
+        termsAgreed: data.termsAgreed,
         brandDeck: file || undefined
       };
       
@@ -719,3 +727,4 @@ const Partners = () => {
 };
 
 export default Partners;
+

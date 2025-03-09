@@ -10,8 +10,8 @@ export interface PartnerFormData {
   phone: string;
   collaborationTypes: string[];
   additionalInfo?: string;
-  brandDeck?: File;
   termsAgreed: boolean;
+  brandDeck?: File;
 }
 
 export async function submitPartnerApplication(data: PartnerFormData) {

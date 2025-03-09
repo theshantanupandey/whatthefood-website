@@ -40,7 +40,7 @@ import {
   Upload,
   ArrowRight,
 } from 'lucide-react';
-import { submitVendorApplication } from '@/services/vendorService';
+import { submitVendorApplication, VendorFormData } from '@/services/vendorService';
 
 const formSchema = z.object({
   businessName: z.string().min(2, { message: 'Business name is required' }),
@@ -146,16 +146,36 @@ const VendorApplication = () => {
     },
   });
   
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (data: FormValues) => {
     setSubmitting(true);
     
     try {
       const formData: VendorFormData = {
-        ...data,
+        businessName: data.businessName,
+        ownerName: data.ownerName,
+        businessType: data.businessType,
+        registrationNumber: data.registrationNumber,
+        gstNumber: data.gstNumber,
+        phone: data.phone,
+        email: data.email,
+        address: data.address,
+        cityState: data.cityState,
+        mealsPerDay: data.mealsPerDay,
+        cuisines: data.cuisines,
+        vegetarianOptions: data.vegetarianOptions,
+        deliveryOptions: [data.packagingOption || ''],
+        mealTypes: data.mealTypes,
+        healthCertifications: data.fssaiStandards ? ['FSSAI'] : [],
         kitchenPhotos: kitchenPhotos,
         foodPhotos: foodPhotos,
-        deliveryOptions: [data.packagingOption || ''],
-        healthCertifications: data.fssaiStandards ? ['FSSAI'] : [],
+        additionalInfo: data.additionalComments,
+        termsAgreed: data.termsAgreed,
+        packagingOption: data.packagingOption,
+        priceRange: data.priceRange,
+        customizationWilling: data.customizationWilling,
+        existingDelivery: data.existingDelivery,
+        whyPartner: data.whyPartner,
+        fssaiStandards: data.fssaiStandards
       };
       
       const response = await submitVendorApplication(formData);
@@ -259,7 +279,7 @@ const VendorApplication = () => {
             </div>
             
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
                 <Card className="border-none shadow-md">
                   <CardContent className="pt-6">
                     {formStep === 0 && (
