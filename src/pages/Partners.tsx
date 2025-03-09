@@ -92,7 +92,7 @@ const Partners = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
-      const formData = {
+      const formData: PartnerFormData = {
         ...data,
         brandDeck: file || undefined
       };

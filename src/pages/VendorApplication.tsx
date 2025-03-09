@@ -109,6 +109,11 @@ const mealTypeOptions = [
   { id: 'allday', label: 'All-day' },
 ];
 
+type VendorFormData = FormValues & {
+  deliveryOptions: string[];
+  healthCertifications: string[];
+};
+
 const VendorApplication = () => {
   const navigate = useNavigate();
   const [formStep, setFormStep] = useState(0);
@@ -145,36 +150,27 @@ const VendorApplication = () => {
     setSubmitting(true);
     
     try {
-      const formData = {
+      const formData: VendorFormData = {
         ...data,
         kitchenPhotos: kitchenPhotos,
-        foodPhotos: foodPhotos
+        foodPhotos: foodPhotos,
+        deliveryOptions: [data.packagingOption || ''],
+        healthCertifications: data.fssaiStandards ? ['FSSAI'] : [],
       };
       
       const response = await submitVendorApplication(formData);
       
       if (response.success) {
-        toast({
-          title: "Application Submitted!",
-          description: "We've received your vendor application and will be in touch soon.",
-        });
+        toast.success("Application Submitted! We've received your vendor application and will be in touch soon.");
         form.reset();
         setKitchenPhotos([]);
         setFoodPhotos([]);
       } else {
-        toast({
-          title: "Submission Failed",
-          description: response.error || "There was an error submitting your application. Please try again.",
-          variant: "destructive",
-        });
+        toast.error(response.error || "There was an error submitting your application. Please try again.");
       }
     } catch (error) {
       console.error("Error submitting vendor application:", error);
-      toast({
-        title: "Submission Error",
-        description: "There was an unexpected error. Please try again later.",
-        variant: "destructive",
-      });
+      toast.error("There was an unexpected error. Please try again later.");
     } finally {
       setSubmitting(false);
     }

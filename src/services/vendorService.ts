@@ -21,6 +21,13 @@ export interface VendorFormData {
   foodPhotos?: File[];
   additionalInfo?: string;
   termsAgreed: boolean;
+  // Add missing fields from the form that aren't in the interface
+  packagingOption?: string;
+  priceRange?: string;
+  customizationWilling?: boolean;
+  existingDelivery?: boolean;
+  whyPartner?: string;
+  fssaiStandards?: boolean;
 }
 
 export async function submitVendorApplication(data: VendorFormData) {
