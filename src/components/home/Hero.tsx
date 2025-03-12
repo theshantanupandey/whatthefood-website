@@ -111,53 +111,56 @@ const Hero = () => {
             </div>
           </AnimatedSection>
           
-          {/* Right side floating cards - fixed positioning to prevent overlap */}
+          {/* Right side overlapping floating cards */}
           <div className="hidden lg:flex lg:col-span-7 relative h-[500px]">
             <div className="absolute inset-0 overflow-visible">
-              {/* First card - top position */}
-              <AnimatedSection animation="fade-in" delay={400}>
-                <div className="absolute top-5 -right-5 w-52 glass-card rounded-2xl p-3 hover-lift transition-all backdrop-blur-md bg-white/60 border border-white/30 shadow-lg animate-float" style={{ animationDelay: '1s' }}>
-                  <div className="overflow-hidden rounded-lg mb-3">
-                    <img 
-                      src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                      alt="Healthy food" 
-                      className="w-full h-32 object-cover transition-transform duration-700 hover:scale-110"
-                    />
-                  </div>
-                  <h4 className="font-medium mb-1 text-sm">Balanced Nutrition</h4>
-                  <p className="text-xs text-muted-foreground">Perfectly portioned meals with all nutrients you need</p>
+              {/* First card - positioned to overlap with others */}
+              <div 
+                className="absolute left-0 top-0 w-64 glass-card rounded-2xl p-4 hover-lift transition-all backdrop-blur-md bg-white/60 border border-white/30 shadow-lg animate-float z-10"
+                style={{ animationDelay: '0.5s', animationDuration: '6s' }}
+              >
+                <div className="overflow-hidden rounded-lg mb-3">
+                  <img 
+                    src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                    alt="Balanced Nutrition" 
+                    className="w-full h-40 object-cover transition-transform duration-700 hover:scale-110"
+                  />
                 </div>
-              </AnimatedSection>
+                <h4 className="font-medium mb-2 text-sm">Balanced Nutrition</h4>
+                <p className="text-xs text-gray-600">Perfectly portioned meals with all nutrients you need</p>
+              </div>
               
-              {/* Second card - bottom position */}
-              <AnimatedSection animation="fade-in" delay={700}>
-                <div className="absolute bottom-5 -right-24 w-52 glass-card rounded-2xl p-3 hover-lift transition-all backdrop-blur-md bg-white/70 border border-white/30 shadow-lg animate-float" style={{ animationDelay: '2s' }}>
-                  <div className="overflow-hidden rounded-lg mb-3">
-                    <img 
-                      src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                      alt="Fresh ingredients"
-                      className="w-full h-32 object-cover transition-transform duration-700 hover:scale-110" 
-                    />
-                  </div>
-                  <h4 className="font-medium mb-1 text-sm">Fresh Ingredients</h4>
-                  <p className="text-xs text-muted-foreground">Locally sourced and delivered fresh to your door</p>
+              {/* Second card - positioned with negative margin for overlap */}
+              <div 
+                className="absolute left-48 top-16 w-64 glass-card rounded-2xl p-4 hover-lift transition-all backdrop-blur-md bg-white/70 border border-white/30 shadow-lg animate-float z-20"
+                style={{ animationDelay: '1s', animationDuration: '7s' }}
+              >
+                <div className="overflow-hidden rounded-lg mb-3">
+                  <img 
+                    src="https://images.unsplash.com/photo-1505576399279-565b52d4ac71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                    alt="Fresh Ingredients"
+                    className="w-full h-40 object-cover transition-transform duration-700 hover:scale-110" 
+                  />
                 </div>
-              </AnimatedSection>
+                <h4 className="font-medium mb-2 text-sm">Fresh Ingredients</h4>
+                <p className="text-xs text-gray-600">Locally sourced and delivered fresh to your door</p>
+              </div>
               
-              {/* Third card - middle position */}
-              <AnimatedSection animation="fade-in" delay={1000}>
-                <div className="absolute top-[40%] -translate-y-1/2 right-2 w-52 glass-intense rounded-2xl p-3 hover-lift transition-all backdrop-blur-xl border border-white/50 shadow-xl animate-float" style={{ animationDelay: '3s' }}>
-                  <div className="overflow-hidden rounded-lg mb-3">
-                    <img 
-                      src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                      alt="Meal variety"
-                      className="w-full h-32 object-cover transition-transform duration-700 hover:scale-110" 
-                    />
-                  </div>
-                  <h4 className="font-medium mb-1 text-sm">Endless Variety</h4>
-                  <p className="text-xs text-muted-foreground">New menus weekly so you never get bored</p>
+              {/* Third card - positioned with negative margin for overlap */}
+              <div 
+                className="absolute left-96 top-4 w-64 glass-intense rounded-2xl p-4 hover-lift transition-all backdrop-blur-xl border border-white/50 shadow-xl animate-float z-30"
+                style={{ animationDelay: '1.5s', animationDuration: '8s' }}
+              >
+                <div className="overflow-hidden rounded-lg mb-3">
+                  <img 
+                    src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80src="
+                    alt="Meal Variety"
+                    className="w-full h-40 object-cover transition-transform duration-700 hover:scale-110" 
+                  />
                 </div>
-              </AnimatedSection>
+                <h4 className="font-medium mb-2 text-sm">Endless Variety</h4>
+                <p className="text-xs text-gray-600">New menus weekly so you never get bored</p>
+              </div>
             </div>
           </div>
         </div>
