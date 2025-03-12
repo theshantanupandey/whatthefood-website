@@ -118,7 +118,7 @@ const About = () => {
               <AnimatedSection delay={100}>
                 <div className="bg-white rounded-2xl shadow-sm p-8 h-full">
                   <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center mb-6">
-                    <span className="text-primary text-lg font-bold">1M+</span>
+                    <span className="text-primary text-lg font-bold">100+</span>
                   </div>
                   <h3 className="text-xl font-semibold mb-4">Meals Delivered</h3>
                   <p className="text-muted-foreground">
@@ -130,7 +130,7 @@ const About = () => {
               <AnimatedSection delay={200}>
                 <div className="bg-white rounded-2xl shadow-sm p-8 h-full">
                   <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center mb-6">
-                    <span className="text-primary text-lg font-bold">20+</span>
+                    <span className="text-primary text-lg font-bold">10+</span>
                   </div>
                   <h3 className="text-xl font-semibold mb-4">Local Partners</h3>
                   <p className="text-muted-foreground">
@@ -185,7 +185,7 @@ const About = () => {
                       <Mail className="w-6 h-6 text-primary mt-1" />
                       <div>
                         <h4 className="font-medium mb-1">Email Us</h4>
-                        <p className="text-muted-foreground">support@whatthefood.com</p>
+                        <p className="text-muted-foreground">support@whatthefood.in</p>
                         <p className="text-sm text-muted-foreground mt-1">We aim to respond within 24 hours</p>
                       </div>
                     </div>
@@ -194,8 +194,8 @@ const About = () => {
                       <Phone className="w-6 h-6 text-primary mt-1" />
                       <div>
                         <h4 className="font-medium mb-1">Call Us</h4>
-                        <p className="text-muted-foreground">(123) 456-7890</p>
-                        <p className="text-sm text-muted-foreground mt-1">Mon-Fri: 9am-6pm EST</p>
+                        <p className="text-muted-foreground">(991)-545-5931</p>
+                        <p className="text-sm text-muted-foreground mt-1">Mon-Sat: 9am-6pm IST</p>
                       </div>
                     </div>
 
