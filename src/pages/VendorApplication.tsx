@@ -203,24 +203,17 @@ const VendorApplication = () => {
     setFormStep(prev => Math.max(prev - 1, 0));
   };
   
-  const handleCuisineChange = (cuisine: string) => {
-    if (selectedCuisines.includes(cuisine)) {
-      setSelectedCuisines(prev => prev.filter(c => c !== cuisine));
-      form.setValue('cuisines', selectedCuisines.filter(c => c !== cuisine));
-    } else {
-      setSelectedCuisines(prev => [...prev, cuisine]);
-      form.setValue('cuisines', [...selectedCuisines, cuisine]);
-    }
-  };
-  
   const handleMealTypeChange = (mealType: string) => {
-    if (selectedMealTypes.includes(mealType)) {
-      setSelectedMealTypes(prev => prev.filter(m => m !== mealType));
-      form.setValue('mealTypes', selectedMealTypes.filter(m => m !== mealType));
-    } else {
-      setSelectedMealTypes(prev => [...prev, mealType]);
-      form.setValue('mealTypes', [...selectedMealTypes, mealType]);
-    }
+    setSelectedMealTypes(prev => {
+      const newMealTypes = prev.includes(mealType)
+        ? prev.filter(m => m !== mealType)
+        : [...prev, mealType];
+      
+      // Update form value with the new array
+      form.setValue('mealTypes', newMealTypes);
+      
+      return newMealTypes;
+    });
   };
   
   return (
@@ -492,7 +485,18 @@ const VendorApplication = () => {
                                   <Checkbox
                                     id={`cuisine-${cuisine}`}
                                     checked={selectedCuisines.includes(cuisine)}
-                                    onCheckedChange={() => handleCuisineChange(cuisine)}
+                                    onCheckedChange={() => {
+                                      setSelectedCuisines(prev => {
+                                        const newCuisines = prev.includes(cuisine)
+                                          ? prev.filter(c => c !== cuisine)
+                                          : [...prev, cuisine];
+                                        
+                                        // Update form value with the new array
+                                        form.setValue('cuisines', newCuisines);
+                                        
+                                        return newCuisines;
+                                      });
+                                    }}
                                   />
                                   <label
                                     htmlFor={`cuisine-${cuisine}`}
@@ -529,7 +533,7 @@ const VendorApplication = () => {
                           <div className="flex items-center space-x-2">
                             <Checkbox
                               id="fssaiStandards"
-                              checked={form.getValues('fssaiStandards')}
+                              checked={form.watch('fssaiStandards')}
                               onCheckedChange={(checked) => {
                                 form.setValue('fssaiStandards', checked === true);
                               }}
@@ -632,7 +636,7 @@ const VendorApplication = () => {
                           <div className="flex items-center space-x-2">
                             <Checkbox
                               id="customizationWilling"
-                              checked={form.getValues('customizationWilling')}
+                              checked={form.watch('customizationWilling')}
                               onCheckedChange={(checked) => {
                                 form.setValue('customizationWilling', checked === true);
                               }}
@@ -648,7 +652,7 @@ const VendorApplication = () => {
                           <div className="flex items-center space-x-2">
                             <Checkbox
                               id="existingDelivery"
-                              checked={form.getValues('existingDelivery')}
+                              checked={form.watch('existingDelivery')}
                               onCheckedChange={(checked) => {
                                 form.setValue('existingDelivery', checked === true);
                               }}

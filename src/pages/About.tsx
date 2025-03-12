@@ -83,8 +83,7 @@ const About = () => {
                 <div className="bg-white rounded-2xl shadow-sm p-8">
                   <h3 className="text-2xl font-semibold mb-4">How It All Started</h3>
                   <p className="text-muted-foreground mb-6">
-                    Our co-founders, Alex Chen and Maria Lopez, met while working at a tech startup in San Francisco. Both were struggling with the same problem: long work hours left little time to prepare healthy meals, leading to frequent takeout and convenience foods.
-                  </p>
+                  Our founder, Shantanu, came up with the idea for What The Food during his college days when finding healthy, home-cooked meals was a daily struggle. Local tiffin services often lacked quality and hygiene, while ordering from restaurants every day was too expensive for a student.                  </p>
                   <p className="text-muted-foreground">The constant challenge of balancing studies with the need for nutritious food led to the vision of What The Food—an affordable, hygienic, and convenient meal service designed for students and working professionals alike.</p>
                 </div>
               </AnimatedSection>
@@ -93,7 +92,7 @@ const About = () => {
                 <div className="relative">
                   <img src="https://images.unsplash.com/photo-1583848547295-0cb991c31d88?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Our founders" className="rounded-2xl shadow-lg" />
                   <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-lg p-6 max-w-[260px]">
-                    <p className="text-sm italic text-muted-foreground">"i started What The Food because we believe everyone deserves access to healthy, convenient meals that don't compromise on taste or nutrition."</p>
+                    <p className="text-sm italic text-muted-foreground">"I started What The Food because I believe everyone deserves access to healthy, convenient meals that don't compromise on taste or nutrition."</p>
                     <p className="text-primary font-medium mt-3">— Shantanu Pandey, Founder</p>
                   </div>
                 </div>
