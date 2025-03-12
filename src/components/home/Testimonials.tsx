@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
@@ -7,30 +6,30 @@ import { Button } from '@/components/ui/button';
 const testimonials = [
   {
     id: 1,
-    content: "What The Food has completely transformed my eating habits. I save so much time not having to meal prep, and the food is absolutely delicious!",
-    author: "Sarah Johnson",
-    role: "Busy Professional",
-    image: "https://randomuser.me/api/portraits/women/1.jpg"
+    content: "Running a business leaves me with little time to cook, but What The Food has been a lifesaver! The meals are healthy, tasty, and super convenient.",
+    author: "Chandan Soni",
+    role: "Entrepreneur",
+    image: "https://randomuser.me/api/portraits/men/1.jpg"
   },
   {
     id: 2,
-    content: "As a fitness enthusiast, I need proper nutrition to fuel my workouts. The High Protein plan gives me exactly what I need, and it tastes amazing!",
-    author: "Michael Chen",
-    role: "Fitness Trainer",
+    content: "As a student, managing studies and cooking daily is tough. What The Food gives me affordable and healthy meals, saving me so much time and effort!",
+    author: "Vansh Khanna",
+    role: "Student",
     image: "https://randomuser.me/api/portraits/men/2.jpg"
   },
   {
     id: 3,
-    content: "The Keto meal plan has been a game-changer for my weight loss journey. Delicious food that keeps me in ketosis without the hassle of cooking.",
-    author: "Jessica Rivera",
-    role: "Marketing Executive",
-    image: "https://randomuser.me/api/portraits/women/3.jpg"
+    content: "Being into fitness, I need a high-protein diet, and What The Food’s meal plans are just perfect! Tasty, nutritious, and keeps me energized for workouts.",
+    author: "Tridev Parida",
+    role: "Employee, Gym Enthusiast",
+    image: "https://randomuser.me/api/portraits/men/3.jpg"
   },
   {
     id: 4,
-    content: "I've tried many meal delivery services, but What The Food stands out for quality and taste. The AI Diet Planner feature is incredible!",
-    author: "David Thompson",
-    role: "Software Engineer",
+    content: "Working in the food tech industry, I understand quality and nutrition. What The Food delivers on both—healthy and delicious meals every time!",
+    author: "Vinayak Gaur",
+    role: "Employee, Food Tech",
     image: "https://randomuser.me/api/portraits/men/4.jpg"
   }
 ];

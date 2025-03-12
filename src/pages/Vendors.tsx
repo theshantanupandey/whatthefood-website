@@ -25,7 +25,7 @@ const vendors = [
   {
     id: 1,
     name: "Fresh Greens Kitchen",
-    location: "New York City",
+    location: "Kharar",
     cuisine: "Plant-based",
     image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
     description: "Specializing in plant-based protein bowls and creative salads."
@@ -33,7 +33,7 @@ const vendors = [
   {
     id: 2,
     name: "Protein Power House",
-    location: "Los Angeles",
+    location: "Chandigarh",
     cuisine: "High-protein",
     image: "https://images.unsplash.com/photo-1543362906-acfc16c67564?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     description: "Focused on macro-balanced meals for fitness enthusiasts."
@@ -41,7 +41,7 @@ const vendors = [
   {
     id: 3,
     name: "Balanced Bites",
-    location: "Chicago",
+    location: "Mohali",
     cuisine: "Mediterranean",
     image: "https://images.unsplash.com/photo-1550831107-1553da8c8464?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
     description: "Mediterranean-inspired healthy meals with local ingredients."
@@ -49,7 +49,7 @@ const vendors = [
   {
     id: 4,
     name: "Keto Kreations",
-    location: "Miami",
+    location: "Kharar",
     cuisine: "Ketogenic",
     image: "https://images.unsplash.com/photo-1572449043416-55f4685c9bb7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
     description: "Specialized in low-carb, high-fat meals for keto lifestyles."
@@ -57,7 +57,7 @@ const vendors = [
   {
     id: 5,
     name: "Seasonal Harvest",
-    location: "Seattle",
+    location: "Chandigarh",
     cuisine: "Farm-to-table",
     image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
     description: "Seasonal ingredients from local farms prepared with minimal processing."
@@ -65,7 +65,7 @@ const vendors = [
   {
     id: 6,
     name: "Macro Meals",
-    location: "Austin",
+    location: "Mohali",
     cuisine: "Custom macros",
     image: "https://images.unsplash.com/photo-1543362906-acfc16c67564?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     description: "Perfectly portioned meals designed to meet specific macro requirements."
@@ -73,7 +73,7 @@ const vendors = [
 ];
 
 // Locations for filtering
-const locations = ["All Locations", "New York City", "Los Angeles", "Chicago", "Miami", "Seattle", "Austin"];
+const locations = ["All Locations", "Kharar", "Chandigarh", "Mohali"];
 
 const benefits = [
   {
