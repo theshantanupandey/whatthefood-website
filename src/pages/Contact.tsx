@@ -121,7 +121,7 @@ const Contact = () => {
                 <p className="text-muted-foreground mb-3">
                   Interested in partnering with WhatTheFood or becoming a vendor?
                 </p>
-                <p className="font-medium">Email: partnerships@whatthefood.com</p>
+                <p className="font-medium">Email: partnerships@whatthefood.in</p>
               </div>
             </div>
             
@@ -168,13 +168,9 @@ const Contact = () => {
           {/* Map or Additional Info Section */}
           <div className="mt-16 text-center">
             <h2 className="text-2xl font-bold mb-6">Visit Our Office</h2>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Our headquarters is located in downtown San Francisco. Feel free to visit us during business hours!
-            </p>
+            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">Our headquarters is located in TBI Chandigarh University. Feel free to visit us during business hours!</p>
             <div className="rounded-lg overflow-hidden h-[400px] bg-muted flex items-center justify-center">
-              <p className="text-muted-foreground">
-                [Map placeholder - 123 Innovation Drive, San Francisco, CA 94105]
-              </p>
+              <p className="text-muted-foreground">Map placeholder - Chandigarh University , Mohali , Punjab, 140301</p>
               {/* In a real implementation, you would embed a Google Map or similar here */}
             </div>
           </div>
