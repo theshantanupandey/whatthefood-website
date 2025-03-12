@@ -34,7 +34,7 @@ const About = () => {
           <div className="container max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <AnimatedSection animation="fade-in-left">
-                <img src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Our mission" className="rounded-3xl shadow-lg" />
+                <img alt="Our mission" className="rounded-3xl shadow-lg" src="https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?q=80&w=1884&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
               </AnimatedSection>
 
               <AnimatedSection animation="fade-in-right">
@@ -222,9 +222,8 @@ const About = () => {
                   <img src="https://images.unsplash.com/photo-1577563908411-5077b6dc7624?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Our office" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-8">
                     <h3 className="text-white text-xl font-semibold mb-2">Visit Our Office</h3>
-                    <p className="text-white/90">
-                      123 Healthy Street, San Francisco, CA 94105
-                    </p>
+                    <p className="text-white/90">TBI , Chandigarh University, Mohali
+Punjab 140301</p>
                     <Button variant="outline" className="mt-4 bg-white/90 text-foreground hover:bg-white w-fit">
                       Get Directions
                     </Button>
