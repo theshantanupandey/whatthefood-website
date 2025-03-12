@@ -1,18 +1,14 @@
-
 import { useEffect } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import { Button } from '@/components/ui/button';
 import { Settings, ArrowRight, Utensils, AlertCircle, Zap } from 'lucide-react';
-
 const Customize = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow pt-16">
         {/* Hero section */}
@@ -43,19 +39,12 @@ const Customize = () => {
                     Everyone&apos;s nutritional needs are different. Customizing your meal plan ensures you get exactly what your body needs based on your:
                   </p>
                   <ul className="space-y-4 mb-8">
-                    {[
-                      'Dietary restrictions and preferences',
-                      'Health and fitness goals',
-                      'Caloric and macronutrient requirements',
-                      'Taste preferences and favorite foods'
-                    ].map((item, idx) => (
-                      <li key={idx} className="flex items-start">
+                    {['Dietary restrictions and preferences', 'Health and fitness goals', 'Caloric and macronutrient requirements', 'Taste preferences and favorite foods'].map((item, idx) => <li key={idx} className="flex items-start">
                         <svg className="w-5 h-5 text-primary mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         <span>{item}</span>
-                      </li>
-                    ))}
+                      </li>)}
                   </ul>
                   <Button className="button-hover-effect">
                     Start Customizing
@@ -66,11 +55,7 @@ const Customize = () => {
 
               <AnimatedSection animation="fade-in-right">
                 <div className="relative">
-                  <img
-                    src="https://images.unsplash.com/photo-1572449043416-55f4685c9bb7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                    alt="Meal customization"
-                    className="rounded-3xl shadow-lg"
-                  />
+                  <img src="https://images.unsplash.com/photo-1572449043416-55f4685c9bb7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Meal customization" className="rounded-3xl shadow-lg" />
                   <div className="absolute -bottom-6 -right-6 bg-white rounded-xl p-4 shadow-lg">
                     <div className="flex items-center">
                       <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center mr-3">
@@ -101,24 +86,19 @@ const Customize = () => {
             </AnimatedSection>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                {
-                  title: 'Dietary Preferences',
-                  description: 'Choose from vegetarian, vegan, pescatarian, or omnivore options to match your lifestyle.',
-                  icon: Utensils
-                },
-                {
-                  title: 'Caloric Intake',
-                  description: 'Select your daily calorie target based on your goals, whether weight loss, maintenance, or muscle gain.',
-                  icon: Zap
-                },
-                {
-                  title: 'Allergen Exclusions',
-                  description: 'Specify any food allergies or intolerances, and we\'ll ensure your meals are always safe for you.',
-                  icon: AlertCircle
-                }
-              ].map((option, idx) => (
-                <AnimatedSection key={idx} delay={idx * 100}>
+              {[{
+              title: 'Dietary Preferences',
+              description: 'Choose from vegetarian, vegan, pescatarian, or omnivore options to match your lifestyle.',
+              icon: Utensils
+            }, {
+              title: 'Caloric Intake',
+              description: 'Select your daily calorie target based on your goals, whether weight loss, maintenance, or muscle gain.',
+              icon: Zap
+            }, {
+              title: 'Allergen Exclusions',
+              description: 'Specify any food allergies or intolerances, and we\'ll ensure your meals are always safe for you.',
+              icon: AlertCircle
+            }].map((option, idx) => <AnimatedSection key={idx} delay={idx * 100}>
                   <div className="bg-white rounded-2xl shadow-sm p-6 h-full flex flex-col">
                     <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
                       <option.icon className="w-6 h-6 text-primary" />
@@ -126,8 +106,7 @@ const Customize = () => {
                     <h3 className="text-xl font-semibold mb-3">{option.title}</h3>
                     <p className="text-muted-foreground flex-grow">{option.description}</p>
                   </div>
-                </AnimatedSection>
-              ))}
+                </AnimatedSection>)}
             </div>
 
             <AnimatedSection delay={300}>
@@ -136,29 +115,16 @@ const Customize = () => {
                   <div>
                     <h3 className="text-2xl font-semibold mb-4">Additional Customization Features</h3>
                     <ul className="space-y-3">
-                      {[
-                        'Macronutrient ratios (protein, fats, carbs)',
-                        'Meal size preferences',
-                        'Specific ingredients to include or exclude',
-                        'Flavor profile preferences',
-                        'Frequency of meal delivery',
-                        'Portion size adjustments'
-                      ].map((feature, idx) => (
-                        <li key={idx} className="flex items-start">
+                      {['Macronutrient ratios (protein, fats, carbs)', 'Meal size preferences', 'Specific ingredients to include or exclude', 'Flavor profile preferences', 'Frequency of meal delivery', 'Portion size adjustments'].map((feature, idx) => <li key={idx} className="flex items-start">
                           <svg className="w-5 h-5 text-primary mr-3 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           <span>{feature}</span>
-                        </li>
-                      ))}
+                        </li>)}
                     </ul>
                   </div>
                   <div className="flex justify-center">
-                    <img
-                      src="https://images.unsplash.com/photo-1543362906-acfc16c67564?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-                      alt="Custom meal options"
-                      className="rounded-xl shadow-sm max-w-full h-auto"
-                    />
+                    <img src="https://images.unsplash.com/photo-1543362906-acfc16c67564?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Custom meal options" className="rounded-xl shadow-sm max-w-full h-auto" />
                   </div>
                 </div>
               </div>
@@ -173,11 +139,7 @@ const Customize = () => {
               <AnimatedSection animation="fade-in-left">
                 <div className="relative">
                   <div className="absolute -left-8 -top-8 w-40 h-40 bg-primary/10 rounded-full opacity-70" />
-                  <img
-                    src="https://images.unsplash.com/photo-1550831107-1553da8c8464?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                    alt="AI Diet Planner"
-                    className="rounded-3xl shadow-lg relative z-10"
-                  />
+                  <img alt="AI Diet Planner" className="rounded-3xl shadow-lg relative z-10" src="https://images.unsplash.com/photo-1542814880-7e62cf14b7c8?q=80&w=1886&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" />
                 </div>
               </AnimatedSection>
 
@@ -191,10 +153,7 @@ const Customize = () => {
                   <p className="text-muted-foreground mb-8">
                     The AI considers factors like your BMI, exercise habits, sleep patterns, and even genetic predispositions to create truly personalized nutrition recommendations.
                   </p>
-                  <Button 
-                    className="button-hover-effect"
-                    onClick={() => window.location.href = '/ai-diet-planner'}
-                  >
+                  <Button className="button-hover-effect" onClick={() => window.location.href = '/ai-diet-planner'}>
                     Try the AI Diet Planner
                   </Button>
                 </div>
@@ -221,8 +180,6 @@ const Customize = () => {
         </section>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Customize;
