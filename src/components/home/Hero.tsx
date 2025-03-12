@@ -104,7 +104,7 @@ const Hero = () => {
                     ))}
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">4.9</span> from 2,500+ reviews
+                    <span className="font-medium text-foreground">4.5</span> from 500+ reviews
                   </p>
                 </div>
               </div>
