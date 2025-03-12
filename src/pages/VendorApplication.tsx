@@ -118,6 +118,7 @@ const VendorApplication = () => {
   const [selectedMealTypes, setSelectedMealTypes] = useState<string[]>([]);
   const [kitchenPhotos, setKitchenPhotos] = useState<File[]>([]);
   const [foodPhotos, setFoodPhotos] = useState<File[]>([]);
+  const [sampleMenu, setSampleMenu] = useState<File[]>([]);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -172,22 +173,35 @@ const VendorApplication = () => {
         customizationWilling: data.customizationWilling,
         existingDelivery: data.existingDelivery,
         whyPartner: data.whyPartner,
-        fssaiStandards: data.fssaiStandards
+        fssaiStandards: data.fssaiStandards,
+        sampleMenu: sampleMenu
       };
       
       const response = await submitVendorApplication(formData);
       
       if (response.success) {
-        toast.success("Application Submitted! We've received your vendor application and will be in touch soon.");
+        toast({
+          title: "Application Successful!",
+          description: "Thank you for applying. We will review your application and get back to you shortly.",
+        });
         form.reset();
         setKitchenPhotos([]);
         setFoodPhotos([]);
+        setSampleMenu([]);
       } else {
-        toast.error(response.error || "There was an error submitting your application. Please try again.");
+        toast({
+          title: "Submission Failed",
+          description: response.error || "There was an error submitting your application. Please try again.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error submitting vendor application:", error);
-      toast.error("There was an unexpected error. Please try again later.");
+      toast({
+        title: "Submission Error",
+        description: "There was an unexpected error. Please try again later.",
+        variant: "destructive",
+      });
     } finally {
       setSubmitting(false);
     }
@@ -686,7 +700,10 @@ const VendorApplication = () => {
                               <label className="block text-sm font-medium mb-2">
                                 FSSAI License
                               </label>
-                              <div className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition">
+                              <div
+                                className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
+                                onClick={() => document.getElementById('fssaiLicenseInput').click()}
+                              >
                                 <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
                                   Click to upload or drag and drop
@@ -694,6 +711,18 @@ const VendorApplication = () => {
                                 <p className="text-xs text-muted-foreground mt-1">
                                   PDF or Image (max. 5MB)
                                 </p>
+                                <input
+                                  id="fssaiLicenseInput"
+                                  type="file"
+                                  accept=".pdf, image/*"
+                                  style={{ display: 'none' }}
+                                  onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files) {
+                                      setKitchenPhotos(Array.from(files));
+                                    }
+                                  }}
+                                />
                               </div>
                             </div>
                             
@@ -701,7 +730,10 @@ const VendorApplication = () => {
                               <label className="block text-sm font-medium mb-2">
                                 GST Certificate (if applicable)
                               </label>
-                              <div className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition">
+                              <div
+                                className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
+                                onClick={() => document.getElementById('gstCertificateInput').click()}
+                              >
                                 <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
                                   Click to upload or drag and drop
@@ -709,6 +741,18 @@ const VendorApplication = () => {
                                 <p className="text-xs text-muted-foreground mt-1">
                                   PDF or Image (max. 5MB)
                                 </p>
+                                <input
+                                  id="gstCertificateInput"
+                                  type="file"
+                                  accept=".pdf, image/*"
+                                  style={{ display: 'none' }}
+                                  onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files) {
+                                      setFoodPhotos(Array.from(files));
+                                    }
+                                  }}
+                                />
                               </div>
                             </div>
                             
@@ -716,7 +760,10 @@ const VendorApplication = () => {
                               <label className="block text-sm font-medium mb-2">
                                 Sample Menu & Pricing
                               </label>
-                              <div className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition">
+                              <div
+                                className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
+                                onClick={() => document.getElementById('sampleMenuInput').click()}
+                              >
                                 <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
                                   Click to upload or drag and drop
@@ -724,6 +771,18 @@ const VendorApplication = () => {
                                 <p className="text-xs text-muted-foreground mt-1">
                                   PDF or Image (max. 5MB)
                                 </p>
+                                <input
+                                  id="sampleMenuInput"
+                                  type="file"
+                                  accept=".pdf, image/*"
+                                  style={{ display: 'none' }}
+                                  onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files) {
+                                      setSampleMenu(Array.from(files));
+                                    }
+                                  }}
+                                />
                               </div>
                             </div>
                           </div>
