@@ -43,7 +43,7 @@ const vendors = [
     name: "Balanced Bites",
     location: "Mohali",
     cuisine: "Mediterranean",
-    image: "https://images.unsplash.com/photo-1550831107-1553da8c8464?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80",
+    image: "https://images.unsplash.com/photo-1616645297079-dfaf44a6f977?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     description: "Mediterranean-inspired healthy meals with local ingredients."
   },
   {

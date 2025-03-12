@@ -101,16 +101,16 @@ const Contact = () => {
                   Follow us on social media for the latest updates, health tips, and special promotions.
                 </p>
                 <div className="flex space-x-4">
-                  <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="bg-secondary p-3 rounded-full hover:bg-primary hover:text-white transition-colors">
+                  <a href="https://instagram.com/whatthefoodin" target="_blank" rel="noopener noreferrer" className="bg-secondary p-3 rounded-full hover:bg-primary hover:text-white transition-colors">
                     <Instagram className="w-5 h-5" />
                   </a>
-                  <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="bg-secondary p-3 rounded-full hover:bg-primary hover:text-white transition-colors">
+                  <a href="https://x.com/whatthefood_in" target="_blank" rel="noopener noreferrer" className="bg-secondary p-3 rounded-full hover:bg-primary hover:text-white transition-colors">
                     <Twitter className="w-5 h-5" />
                   </a>
                   <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="bg-secondary p-3 rounded-full hover:bg-primary hover:text-white transition-colors">
                     <Facebook className="w-5 h-5" />
                   </a>
-                  <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="bg-secondary p-3 rounded-full hover:bg-primary hover:text-white transition-colors">
+                  <a href="https://linkedin.com/company/whatthefood" target="_blank" rel="noopener noreferrer" className="bg-secondary p-3 rounded-full hover:bg-primary hover:text-white transition-colors">
                     <Linkedin className="w-5 h-5" />
                   </a>
                 </div>
