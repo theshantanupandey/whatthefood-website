@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone, Linkedin, Instagram, Twitter } from 'lucide-react';
@@ -6,14 +5,11 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import { Button } from '@/components/ui/button';
-
 const About = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow pt-16">
         {/* Hero section */}
@@ -38,11 +34,7 @@ const About = () => {
           <div className="container max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <AnimatedSection animation="fade-in-left">
-                <img
-                  src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                  alt="Our mission"
-                  className="rounded-3xl shadow-lg"
-                />
+                <img src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Our mission" className="rounded-3xl shadow-lg" />
               </AnimatedSection>
 
               <AnimatedSection animation="fade-in-right">
@@ -93,24 +85,16 @@ const About = () => {
                   <p className="text-muted-foreground mb-6">
                     Our co-founders, Alex Chen and Maria Lopez, met while working at a tech startup in San Francisco. Both were struggling with the same problem: long work hours left little time to prepare healthy meals, leading to frequent takeout and convenience foods.
                   </p>
-                  <p className="text-muted-foreground">
-                    After a health scare prompted Alex to reassess his eating habits, he and Maria began researching solutions. When they couldn't find a service that provided genuinely healthy, fresh meals without requiring preparation time, they realized they had identified a gap in the market that affected countless busy professionals like themselves.
-                  </p>
+                  <p className="text-muted-foreground">The constant challenge of balancing studies with the need for nutritious food led to the vision of What The Food—an affordable, hygienic, and convenient meal service designed for students and working professionals alike.</p>
                 </div>
               </AnimatedSection>
 
               <AnimatedSection animation="fade-in-right" delay={300}>
                 <div className="relative">
-                  <img 
-                    src="https://images.unsplash.com/photo-1583848547295-0cb991c31d88?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                    alt="Our founders"
-                    className="rounded-2xl shadow-lg"
-                  />
+                  <img src="https://images.unsplash.com/photo-1583848547295-0cb991c31d88?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Our founders" className="rounded-2xl shadow-lg" />
                   <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl shadow-lg p-6 max-w-[260px]">
-                    <p className="text-sm italic text-muted-foreground">
-                      "We started What The Food because we believe everyone deserves access to healthy, convenient meals that don't compromise on taste or nutrition."
-                    </p>
-                    <p className="text-primary font-medium mt-3">— Alex Chen, Co-founder</p>
+                    <p className="text-sm italic text-muted-foreground">"i started What The Food because we believe everyone deserves access to healthy, convenient meals that don't compromise on taste or nutrition."</p>
+                    <p className="text-primary font-medium mt-3">— Shantanu Pandey, Founder</p>
                   </div>
                 </div>
               </AnimatedSection>
@@ -218,16 +202,13 @@ const About = () => {
                     <div>
                       <h4 className="font-medium mb-3">Follow Us</h4>
                       <div className="flex gap-4">
-                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" 
-                          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
                           <Instagram className="w-5 h-5" />
                         </a>
-                        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" 
-                          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+                        <a href="https://www.twitter.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
                           <Twitter className="w-5 h-5" />
                         </a>
-                        <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" 
-                          className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
+                        <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-white transition-colors">
                           <Linkedin className="w-5 h-5" />
                         </a>
                       </div>
@@ -238,11 +219,7 @@ const About = () => {
 
               <AnimatedSection animation="fade-in-right">
                 <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-lg">
-                  <img 
-                    src="https://images.unsplash.com/photo-1577563908411-5077b6dc7624?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
-                    alt="Our office"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src="https://images.unsplash.com/photo-1577563908411-5077b6dc7624?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Our office" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-8">
                     <h3 className="text-white text-xl font-semibold mb-2">Visit Our Office</h3>
                     <p className="text-white/90">
@@ -259,8 +236,6 @@ const About = () => {
         </section>
       </main>
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default About;
