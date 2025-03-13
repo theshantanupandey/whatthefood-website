@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -443,7 +442,11 @@ const MealPlans = () => {
                       {filteredPlans.map((plan) => (
                         <div 
                           key={plan.id}
-                          onClick={() => setSelectedPlan(plan)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setSelectedPlan(plan);
+                          }}
                           className={cn(
                             "p-4 rounded-lg cursor-pointer transition-all",
                             selectedPlan.id === plan.id 
