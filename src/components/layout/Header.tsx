@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -8,6 +7,7 @@ import { cn } from '@/lib/utils';
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(false);
   const location = useLocation();
 
   const navigation = [
@@ -28,8 +28,18 @@ const Header = () => {
       }
     };
 
+    const checkMobileView = () => {
+      setIsMobileView(window.innerWidth < 1024);
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', checkMobileView);
+    checkMobileView(); // Initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', checkMobileView);
+    };
   }, []);
 
   useEffect(() => {
@@ -72,19 +82,21 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Mobile Menu Button */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="lg:hidden"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? (
-            <X className="w-5 h-5" />
-          ) : (
-            <Menu className="w-5 h-5" />
-          )}
-        </Button>
+        {/* Enhanced Mobile Menu Button */}
+        {isMobileView && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden z-50"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6 text-primary" />
+            ) : (
+              <Menu className="w-6 h-6 text-foreground/80" />
+            )}
+          </Button>
+        )}
 
         {/* Download App Button (Desktop) */}
         <Button className="hidden lg:flex button-hover-effect bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all duration-500 shadow-lg shadow-primary/20">
@@ -93,31 +105,33 @@ const Header = () => {
       </div>
 
       {/* Mobile Navigation */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden">
-          <div className="fixed inset-0 z-40 bg-white/80 backdrop-blur-xl flex flex-col animate-in slide-in-from-top duration-500">
-            <div className="px-4 pt-20 pb-6 flex flex-col space-y-4">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className={cn(
-                    'px-4 py-3 text-base font-medium transition-all duration-300 rounded-md hover:bg-primary/10 hover:translate-x-2',
-                    location.pathname === item.href
-                      ? 'bg-accent text-primary'
-                      : 'text-foreground/80'
-                  )}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <Button className="mt-4 w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all duration-500 shadow-lg shadow-primary/20">
-                Download App
-              </Button>
-            </div>
-          </div>
+      <div
+        className={`lg:hidden fixed inset-0 z-40 bg-white/95 backdrop-blur-xl transform transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen
+            ? 'translate-y-0 opacity-100'
+            : '-translate-y-full opacity-0'
+        }`}
+      >
+        <div className="px-4 pt-20 pb-6 flex flex-col space-y-4">
+          {navigation.map((item) => (
+            <Link
+              key={item.name}
+              to={item.href}
+              className={cn(
+                'px-4 py-3 text-base font-medium transition-all duration-300 rounded-md hover:bg-primary/10 hover:translate-x-2',
+                location.pathname === item.href
+                  ? 'bg-accent text-primary'
+                  : 'text-foreground/80'
+              )}
+            >
+              {item.name}
+            </Link>
+          ))}
+          <Button className="mt-4 w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary transition-all duration-500 shadow-lg shadow-primary/20">
+            Download App
+          </Button>
         </div>
-      )}
+      </div>
     </header>
   );
 };
