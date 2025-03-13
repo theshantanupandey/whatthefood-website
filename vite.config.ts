@@ -19,4 +19,27 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: ['zod', '@hookform/resolvers/zod']
+  },
+  build: {
+    commonjsOptions: {
+      include: [/zod/, /node_modules/]
+    },
+    rollupOptions: {
+      // Make sure external packages that shouldn't be bundled are listed here
+      external: [],
+      // Provide globals for packages that are externalized
+      output: {
+        // Global variables to use in UMD build for externalized deps
+        globals: {},
+        manualChunks(id) {
+          // Create a separate chunk for zod
+          if (id.includes('node_modules/zod')) {
+            return 'zod';
+          }
+        }
+      },
+    },
+  },
 }));
