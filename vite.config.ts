@@ -27,16 +27,15 @@ export default defineConfig(({ mode }) => ({
       include: [/zod/, /node_modules/]
     },
     rollupOptions: {
-      external: ['zod'],
       output: {
-        globals: {
-          zod: 'zod'
-        },
+        manualChunks(id) {
+          if (id.includes('node_modules/zod')) {
+            return 'vendor-zod';
+          }
+        }
       },
     },
-    // Ensure assets in the public directory are included in the build
     assetsInclude: ['**/*.ico'],
   },
-  // Properly handle public directory assets
   publicDir: 'public',
 }));
