@@ -19,23 +19,22 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Ensure zod is properly pre-bundled
   optimizeDeps: {
     include: ['zod', '@hookform/resolvers/zod']
   },
   build: {
+    // Ensure zod is properly bundled
     commonjsOptions: {
-      include: [/zod/, /node_modules/]
+      include: [/node_modules/]
     },
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules/zod')) {
-            return 'vendor-zod';
-          }
-        }
-      },
-    },
+    // Disable minification for debugging
+    minify: mode === 'production',
+    // Ensure source maps are generated
+    sourcemap: true,
+    // Ensure assets in the public directory are included in the build
     assetsInclude: ['**/*.ico'],
   },
+  // Properly handle public directory assets
   publicDir: 'public',
 }));
