@@ -27,18 +27,13 @@ export default defineConfig(({ mode }) => ({
       include: [/zod/, /node_modules/]
     },
     rollupOptions: {
-      // Make sure external packages that shouldn't be bundled are listed here
-      external: [],
-      // Provide globals for packages that are externalized
+      // Explicitly add zod to external packages as suggested by the error message
+      external: ['zod'],
       output: {
         // Global variables to use in UMD build for externalized deps
-        globals: {},
-        manualChunks(id) {
-          // Create a separate chunk for zod
-          if (id.includes('node_modules/zod')) {
-            return 'zod';
-          }
-        }
+        globals: {
+          zod: 'zod'
+        },
       },
     },
   },
