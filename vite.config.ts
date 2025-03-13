@@ -13,28 +13,34 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === 'development' &&
     componentTagger(),
+    // Custom plugin to resolve zod
+    {
+      name: 'resolve-zod',
+      resolveId(source: string) {
+        // Intercept zod imports
+        if (source === 'zod') {
+          return { id: 'zod', external: false };
+        }
+        return null;
+      }
+    }
   ].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+    dedupe: ['zod']
   },
-  // Ensure zod is properly pre-bundled
   optimizeDeps: {
     include: ['zod', '@hookform/resolvers/zod']
   },
   build: {
-    // Ensure zod is properly bundled
     commonjsOptions: {
       include: [/node_modules/]
     },
-    // Disable minification for debugging
     minify: mode === 'production',
-    // Ensure source maps are generated
     sourcemap: true,
-    // Ensure assets in the public directory are included in the build
     assetsInclude: ['**/*.ico'],
   },
-  // Properly handle public directory assets
   publicDir: 'public',
 }));
