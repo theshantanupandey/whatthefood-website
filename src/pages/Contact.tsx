@@ -5,10 +5,10 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import { submitContactForm } from '@/services/contactService';
+
 const Contact = () => {
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,36 +16,58 @@ const Contact = () => {
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const {
-      name,
-      value
-    } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
-    setTimeout(() => {
+    try {
+      // Submit form data to Supabase using the contactService
+      const result = await submitContactForm(formData);
+      
+      if (result.success) {
+        toast({
+          title: "Message Sent!",
+          description: result.message || "We'll get back to you as soon as possible."
+        });
+        
+        // Reset form after successful submission
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        // Show error message if submission failed
+        toast({
+          title: "Error",
+          description: result.message || "There was a problem sending your message. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
       toast({
-        title: "Message Sent!",
-        description: "We'll get back to you as soon as possible."
+        title: "Error",
+        description: "There was a problem sending your message. Please try again.",
+        variant: "destructive"
       });
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
-  return <div className="min-h-screen flex flex-col">
+
+  return (
+    <div className="min-h-screen flex flex-col">
       <Header />
       
       <main className="flex-1 pt-24 pb-16">
@@ -178,6 +200,8 @@ const Contact = () => {
       </main>
       
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default Contact;

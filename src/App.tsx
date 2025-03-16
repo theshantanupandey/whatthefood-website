@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -16,6 +15,7 @@ import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
 import Partners from "./pages/Partners";
 import NotFound from "./pages/NotFound";
+import SupabaseSetup from "@/pages/SupabaseSetup";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +37,7 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/partners" element={<Partners />} />
+          <Route path="/supabase-setup" element={<SupabaseSetup />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
