@@ -16,6 +16,7 @@ import FAQ from "./pages/FAQ";
 import Partners from "./pages/Partners";
 import NotFound from "./pages/NotFound";
 import SupabaseSetup from "@/pages/SupabaseSetup";
+import JoinUs from "./pages/JoinUs";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/faq" element={<FAQ />} />
           <Route path="/partners" element={<Partners />} />
           <Route path="/supabase-setup" element={<SupabaseSetup />} />
+          <Route path="/join-us" element={<JoinUs />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

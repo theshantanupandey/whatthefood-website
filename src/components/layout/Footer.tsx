@@ -1,116 +1,168 @@
-
-// This file is read-only, so we need to create a modified version
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram, Twitter, Facebook, Youtube } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import NewsletterSignup from '@/components/newsletter/NewsletterSignup';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { toast } from "sonner";
+import { subscribeToNewsletter, NewsletterSubscription } from "@/services/newsletterService";
+import { useState } from "react";
+import { Instagram, Twitter, Facebook, Youtube } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 
-// You'll need to create a new footer component since the original is read-only
-const AppFooter = () => {
+const formSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
+const Footer = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  const onSubmit = async (data: FormValues) => {
+    try {
+      setIsSubmitting(true);
+      const subscription: NewsletterSubscription = {
+        email: data.email
+      };
+      await subscribeToNewsletter(subscription);
+      toast.success("Subscribed Successfully!", {
+        description: "Thank you for subscribing to our newsletter!",
+      });
+      form.reset();
+    } catch (error) {
+      console.error("Error subscribing to newsletter:", error);
+      toast.error("Subscription Failed", {
+        description: "There was an error subscribing to the newsletter. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <footer className="bg-card">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* About column */}
-          <div>
-            <h3 className="font-display font-bold text-xl mb-4">What The Food</h3>
-            <p className="text-muted-foreground mb-4">
-              Healthy, delicious meals delivered to your doorstep. Customized meal plans to meet your nutritional goals.
+    <footer className="bg-background border-t">
+      <div className="container py-12 md:py-16">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+          <div className="space-y-4 lg:col-span-1">
+            <h2 className="text-xl font-bold">What The Food</h2>
+            <p className="text-muted-foreground text-sm">
+              Redefining food delivery with a focus on quality, sustainability, and community.
             </p>
             <div className="flex space-x-4">
-              <a href="https://instagram.com" className="text-muted-foreground hover:text-primary transition-colors">
-                <Instagram size={20} />
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Instagram className="h-5 w-5" />
+                <span className="sr-only">Instagram</span>
               </a>
-              <a href="https://twitter.com" className="text-muted-foreground hover:text-primary transition-colors">
-                <Twitter size={20} />
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Twitter className="h-5 w-5" />
+                <span className="sr-only">Twitter</span>
               </a>
-              <a href="https://facebook.com" className="text-muted-foreground hover:text-primary transition-colors">
-                <Facebook size={20} />
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Facebook className="h-5 w-5" />
+                <span className="sr-only">Facebook</span>
               </a>
-              <a href="https://youtube.com" className="text-muted-foreground hover:text-primary transition-colors">
-                <Youtube size={20} />
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Youtube className="h-5 w-5" />
+                <span className="sr-only">YouTube</span>
               </a>
             </div>
           </div>
           
-          {/* Explore column */}
-          <div>
-            <h3 className="font-bold text-lg mb-4">Explore</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/meal-plans" className="text-muted-foreground hover:text-primary transition-colors">
-                  Meal Plans
-                </Link>
-              </li>
-              <li>
-                <Link to="/customize" className="text-muted-foreground hover:text-primary transition-colors">
-                  Customize Your Meals
-                </Link>
-              </li>
-              <li>
-                <Link to="/ai-diet-planner" className="text-muted-foreground hover:text-primary transition-colors">
-                  AI Diet Planner
-                </Link>
-              </li>
-              <li>
-                <Link to="/vendors" className="text-muted-foreground hover:text-primary transition-colors">
-                  Vendors
-                </Link>
-              </li>
-            </ul>
+          <div className="space-y-4">
+            <h3 className="font-medium">Company</h3>
+            <nav className="flex flex-col space-y-2 text-sm">
+              <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                About Us
+              </Link>
+              <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                Contact
+              </Link>
+              <Link to="/join-us" className="text-muted-foreground hover:text-primary transition-colors">
+                Join Us
+              </Link>
+              <Link to="/vendors" className="text-muted-foreground hover:text-primary transition-colors">
+                Vendors
+              </Link>
+              <Link to="/partners" className="text-muted-foreground hover:text-primary transition-colors">
+                Partners
+              </Link>
+            </nav>
           </div>
           
-          {/* Resources column */}
-          <div>
-            <h3 className="font-bold text-lg mb-4">Resources</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link to="/blog" className="text-muted-foreground hover:text-primary transition-colors">
-                  Blog
-                </Link>
-              </li>
-              <li>
-                <Link to="/faq" className="text-muted-foreground hover:text-primary transition-colors">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <Link to="/partners" className="text-muted-foreground hover:text-primary transition-colors">
-                  Partners
-                </Link>
-              </li>
-              <li>
-                <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
+          <div className="space-y-4">
+            <h3 className="font-medium">Resources</h3>
+            <nav className="flex flex-col space-y-2 text-sm">
+              <Link to="/blog" className="text-muted-foreground hover:text-primary transition-colors">
+                Blog
+              </Link>
+              <Link to="/faq" className="text-muted-foreground hover:text-primary transition-colors">
+                FAQ
+              </Link>
+              <Link to="/help" className="text-muted-foreground hover:text-primary transition-colors">
+                Help Center
+              </Link>
+            </nav>
           </div>
           
-          {/* Newsletter column */}
-          <div>
-            <NewsletterSignup />
+          <div className="space-y-4">
+            <h3 className="font-medium">Newsletter</h3>
+            <p className="text-sm text-muted-foreground">
+              Stay updated with our latest news and offers.
+            </p>
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="Enter your email"
+                          className="w-full"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" disabled={isSubmitting} className="w-full">
+                  Subscribe
+                </Button>
+              </form>
+            </Form>
           </div>
         </div>
         
         <Separator className="my-8" />
         
-        <div className="text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} What The Food. All rights reserved.</p>
-          <div className="mt-2 space-x-4">
-            <Link to="/privacy" className="hover:text-primary transition-colors">
+        <div className="flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-sm text-muted-foreground">
+            &copy; {new Date().getFullYear()} What The Food. All rights reserved.
+          </p>
+          <div className="flex items-center space-x-4 mt-2 sm:mt-0">
+            <Link to="/privacy" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               Privacy Policy
             </Link>
-            <Link to="/terms" className="hover:text-primary transition-colors">
+            <span className="text-muted-foreground">|</span>
+            <Link to="/terms" className="text-sm text-muted-foreground hover:text-primary transition-colors">
               Terms of Service
             </Link>
+            <span className="text-muted-foreground">|</span>
+            <p className="text-sm text-muted-foreground">
+              Designed with &#10084; for food lovers
+            </p>
           </div>
         </div>
       </div>
@@ -118,4 +170,4 @@ const AppFooter = () => {
   );
 };
 
-export default AppFooter;
+export default Footer;
