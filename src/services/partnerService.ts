@@ -1,5 +1,6 @@
 import { supabase } from '@/lib/supabase';
 import { uploadFileToBucket } from '@/utils/fileUpload';
+import { toast } from '@/components/ui/use-toast';
 
 export interface PartnerFormData {
   brandName: string;
@@ -14,73 +15,79 @@ export interface PartnerFormData {
   brandDeck?: File;
 }
 
-export interface PartnerSubmissionResult {
-  success: boolean;
-  message: string;
-  data?: any;
-  error?: any;
-}
-
-export async function submitPartnerApplication(data: PartnerFormData): Promise<PartnerSubmissionResult> {
+export async function submitPartnerApplication(data: PartnerFormData) {
   try {
-    // Handle file upload if brandDeck is provided
+    console.log('Starting partner application submission process...');
+    
+    // Upload brand deck if provided
     let brandDeckUrl = null;
     if (data.brandDeck) {
-      const fileName = `${data.brandName.replace(/\s+/g, '-').toLowerCase()}-${Date.now()}`;
+      console.log(`Uploading brand deck for ${data.brandName}...`);
+      const brandNameSlug = data.brandName.replace(/\s+/g, '-').toLowerCase();
       
-      console.log(`Starting brand deck upload for ${data.brandName}...`);
       const uploadResult = await uploadFileToBucket(
-        'partner-applications', // Using hyphen instead of underscore to match the actual bucket name
+        'partner-applications',
         data.brandDeck,
-        '', // No subfolder
-        fileName // Use the generated file name
+        'brand_decks/',
+        `deck-${brandNameSlug}-${Date.now()}`
       );
       
-      if (!uploadResult.success) {
-        console.error('Brand deck upload failed:', uploadResult.error);
-        // Don't throw an error, just log it and continue with the application
-        console.log('Continuing with application submission without the brand deck');
-      } else {
-        console.log('Brand deck uploaded successfully:', uploadResult.publicUrl);
+      if (uploadResult.success) {
         brandDeckUrl = uploadResult.publicUrl;
+        console.log(`Successfully uploaded brand deck: ${brandDeckUrl}`);
+      } else {
+        console.error('Failed to upload brand deck:', uploadResult.error);
       }
     }
     
-    // Insert partner application data
+    // Insert partner application data into the database
     console.log('Inserting partner application data into database...');
-    const { data: result, error } = await supabase
+    const { data: insertedData, error } = await supabase
       .from('partner_applications')
-      .insert([{
-        brand_name: data.brandName,
-        website: data.website,
-        industry_type: data.industryType,
-        contact_name: data.contactName,
-        email: data.email,
-        phone: data.phone,
-        collaboration_types: data.collaborationTypes,
-        additional_info: data.additionalInfo || null,
-        terms_agreed: data.termsAgreed,
-        brand_deck_url: brandDeckUrl,
-        created_at: new Date().toISOString()
-      }]);
-
+      .insert([
+        {
+          brand_name: data.brandName,
+          website: data.website,
+          industry_type: data.industryType,
+          contact_name: data.contactName,
+          email: data.email,
+          phone: data.phone,
+          collaboration_types: data.collaborationTypes,
+          additional_info: data.additionalInfo || null,
+          terms_agreed: data.termsAgreed,
+          brand_deck_url: brandDeckUrl
+        }
+      ])
+      .select();
+    
     if (error) {
-      console.error('Database insert error:', error);
-      throw error;
+      console.error('Error submitting partner application:', error);
+      toast({
+        title: 'Submission Failed',
+        description: 'There was an error submitting your application. Please try again.',
+        variant: 'destructive',
+      });
+      return { success: false, error };
     }
-
-    console.log('Partner application submitted successfully!');
-    return {
-      success: true,
-      message: `Thank you, ${data.contactName}! Your partner application for ${data.brandName} has been submitted successfully. We'll be in touch soon.`,
-      data: result
-    };
+    
+    console.log('Partner application submitted successfully:', insertedData);
+    toast({
+      title: 'Application Submitted',
+      description: 'Your partner application has been submitted successfully. We will contact you soon!',
+      variant: 'default',
+    });
+    
+    return { success: true, data: insertedData };
   } catch (error) {
-    console.error('Error submitting partner application:', error);
-    return {
-      success: false,
-      message: 'There was an error submitting your application. Please try again later.',
-      error: error instanceof Error ? error.message : 'An unknown error occurred'
+    console.error('Unexpected error during partner application submission:', error);
+    toast({
+      title: 'Submission Failed',
+      description: 'An unexpected error occurred. Please try again later.',
+      variant: 'destructive',
+    });
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'An unknown error occurred' 
     };
   }
 }

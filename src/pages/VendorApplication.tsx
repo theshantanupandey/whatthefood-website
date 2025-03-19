@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -42,6 +42,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { submitVendorApplication, VendorFormData } from '@/services/vendorService';
+import { ensureRequiredBuckets } from '@/utils/setupBuckets';
 
 const formSchema = z.object({
   businessName: z.string().min(2, { message: 'Business name is required' }),
@@ -110,15 +111,26 @@ const mealTypeOptions = [
   { id: 'allday', label: 'All-day' },
 ];
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const MAX_FILES = 5; // Maximum number of files per category
+
 const VendorApplication = () => {
   const navigate = useNavigate();
   const [formStep, setFormStep] = useState(0);
   const [isSubmitting, setSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [selectedCuisines, setSelectedCuisines] = useState<string[]>([]);
   const [selectedMealTypes, setSelectedMealTypes] = useState<string[]>([]);
   const [kitchenPhotos, setKitchenPhotos] = useState<File[]>([]);
   const [foodPhotos, setFoodPhotos] = useState<File[]>([]);
-  const [sampleMenu, setSampleMenu] = useState<File[]>([]);
+  
+  // Ensure buckets exist when component mounts
+  useEffect(() => {
+    ensureRequiredBuckets().catch(err => {
+      console.error('Error setting up buckets:', err);
+    });
+  }, []);
   
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -143,10 +155,54 @@ const VendorApplication = () => {
     },
   });
   
+  const validateFiles = (files: File[]): { valid: boolean; error?: string } => {
+    if (files.length > MAX_FILES) {
+      return { valid: false, error: `Maximum ${MAX_FILES} files allowed` };
+    }
+
+    for (const file of files) {
+      if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+        return { valid: false, error: 'Only JPG, PNG and WebP images are allowed' };
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        return { valid: false, error: 'Files must be less than 10MB' };
+      }
+    }
+
+    return { valid: true };
+  };
+
   const handleSubmit = async (data: FormValues) => {
     setSubmitting(true);
+    setIsUploading(true);
     
     try {
+      // Validate kitchen photos
+      if (kitchenPhotos.length > 0) {
+        const kitchenValidation = validateFiles(kitchenPhotos);
+        if (!kitchenValidation.valid) {
+          toast({
+            title: 'Kitchen Photos Error',
+            description: kitchenValidation.error,
+            variant: 'destructive',
+          });
+          return;
+        }
+      }
+
+      // Validate food photos
+      if (foodPhotos.length > 0) {
+        const foodValidation = validateFiles(foodPhotos);
+        if (!foodValidation.valid) {
+          toast({
+            title: 'Food Photos Error',
+            description: foodValidation.error,
+            variant: 'destructive',
+          });
+          return;
+        }
+      }
+
       const formData: VendorFormData = {
         businessName: data.businessName,
         ownerName: data.ownerName,
@@ -173,37 +229,34 @@ const VendorApplication = () => {
         customizationWilling: data.customizationWilling,
         existingDelivery: data.existingDelivery,
         whyPartner: data.whyPartner,
-        fssaiStandards: data.fssaiStandards,
-        sampleMenu: sampleMenu
+        fssaiStandards: data.fssaiStandards
       };
       
       const response = await submitVendorApplication(formData);
       
       if (response.success) {
         toast({
-          title: "Application Successful!",
-          description: "Thank you for applying. We will review your application and get back to you shortly.",
+          title: 'Application Submitted',
+          description: 'Your vendor application has been submitted successfully. We will contact you soon!',
         });
-        form.reset();
-        setKitchenPhotos([]);
-        setFoodPhotos([]);
-        setSampleMenu([]);
-      } else {
-        toast({
-          title: "Submission Failed",
-          description: response.error || "There was an error submitting your application. Please try again.",
-          variant: "destructive",
-        });
+        // Only reset and navigate after successful toast
+        setTimeout(() => {
+          form.reset();
+          setKitchenPhotos([]);
+          setFoodPhotos([]);
+          navigate('/');
+        }, 2000);
       }
     } catch (error) {
       console.error("Error submitting vendor application:", error);
       toast({
-        title: "Submission Error",
-        description: "There was an unexpected error. Please try again later.",
-        variant: "destructive",
+        title: 'Submission Failed',
+        description: error instanceof Error ? error.message : 'An unexpected error occurred',
+        variant: 'destructive',
       });
     } finally {
       setSubmitting(false);
+      setIsUploading(false);
     }
   };
   
@@ -779,7 +832,7 @@ const VendorApplication = () => {
                                   onChange={(e) => {
                                     const files = e.target.files;
                                     if (files) {
-                                      setSampleMenu(Array.from(files));
+                                      // setSampleMenu(Array.from(files));
                                     }
                                   }}
                                 />
@@ -903,9 +956,9 @@ const VendorApplication = () => {
                       <Button
                         type="submit"
                         className="ml-auto"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isUploading}
                       >
-                        {isSubmitting ? 'Submitting...' : 'Submit Application'}
+                        {isSubmitting || isUploading ? 'Submitting...' : 'Submit Application'}
                       </Button>
                     )}
                   </CardFooter>

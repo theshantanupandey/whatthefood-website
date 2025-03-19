@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from '@/lib/zod-shim';
@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { submitPartnerApplication, PartnerFormData } from '@/services/partnerService';
+import { ensureRequiredBuckets } from '@/utils/setupBuckets';
 
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -69,6 +70,12 @@ const Partners = () => {
   const { toast } = useToast();
   const [file, setFile] = useState<File | null>(null);
   
+  useEffect(() => {
+    ensureRequiredBuckets().catch(err => {
+      console.error('Error setting up buckets:', err);
+    });
+  }, []);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -108,11 +115,6 @@ const Partners = () => {
       const response = await submitPartnerApplication(formData);
       
       if (response.success) {
-        toast({
-          title: "Application Submitted!",
-          description: "We've received your partnership application and will be in touch soon.",
-        });
-        
         form.reset();
         setFile(null);
       } else {
@@ -124,11 +126,6 @@ const Partners = () => {
       }
     } catch (error) {
       console.error("Error submitting partnership application:", error);
-      toast({
-        title: "Submission Error",
-        description: "There was an unexpected error. Please try again later.",
-        variant: "destructive",
-      });
     }
   };
 
