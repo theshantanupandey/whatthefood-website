@@ -93,7 +93,7 @@ const positions: Position[] = [
   {
     title: "Marketing Specialist",
     type: "Full-time",
-    location: "New Delhi",
+    location: "Chandigarh",
     description: "Drive our brand growth and customer engagement strategies"
   },
   {
