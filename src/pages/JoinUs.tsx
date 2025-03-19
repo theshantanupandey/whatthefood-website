@@ -71,28 +71,34 @@ type FormValues = z.infer<typeof formSchema>;
 const positions: Position[] = [
   {
     title: "Full Stack Developer",
+    type: "Intern",
+    location: "Remote",
     description: "Join our engineering team to build and maintain our web applications using modern technologies like React, Node.js, and TypeScript.",
     requirements: ["3+ years of experience with React and Node.js", "Strong TypeScript skills", "Experience with cloud platforms (AWS/GCP)"],
   },
   {
     title: "UI/UX Designer",
+    type: "Intern",
+    location: "Remote",
     description: "Help create beautiful and intuitive user experiences for our web and mobile applications.",
     requirements: ["3+ years of UI/UX design experience", "Proficiency in Figma", "Strong portfolio of web/mobile designs"],
   },
   {
     title: "Product Manager",
+    type: "Intern",
+    location: "Remote",
     description: "Lead product strategy and work closely with design and engineering teams to deliver exceptional user experiences.",
     requirements: ["4+ years of product management experience", "Strong analytical and communication skills", "Experience with agile methodologies"],
   },
   {
     title: "Software Engineer",
-    type: "Full-time",
+    type: "Intern",
     location: "Remote",
     description: "Join our tech team to build innovative solutions for healthy food delivery"
   },
   {
     title: "Marketing Specialist",
-    type: "Full-time",
+    type: "Intern",
     location: "Chandigarh",
     description: "Drive our brand growth and customer engagement strategies"
   },
