@@ -130,12 +130,12 @@ const Partners = () => {
   };
 
   const partners = [
-    { name: 'Organic Harvest', logo: '/placeholder.svg' },
-    { name: 'FitLife Nutrition', logo: '/placeholder.svg' },
-    { name: 'Green Kitchen', logo: '/placeholder.svg' },
-    { name: 'Wellness Daily', logo: '/placeholder.svg' },
-    { name: 'Pure Protein', logo: '/placeholder.svg' },
-    { name: 'EcoPackage', logo: '/placeholder.svg' },
+    { name: 'Organic Harvest', logo: 'https://images.unsplash.com/photo-1557844352-761f2548b646?q=80&w=580&auto=format&fit=crop' },
+    { name: 'FitLife Nutrition', logo: 'https://images.unsplash.com/photo-1576678927484-cc907957088c?q=80&w=580&auto=format&fit=crop' },
+    { name: 'Green Kitchen', logo: 'https://images.unsplash.com/photo-1546241072-48010ad2862c?q=80&w=580&auto=format&fit=crop' },
+    { name: 'Wellness Daily', logo: 'https://images.unsplash.com/photo-1591985666643-1eeff437b74e?q=80&w=580&auto=format&fit=crop' },
+    { name: 'Pure Protein', logo: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?q=80&w=580&auto=format&fit=crop' },
+    { name: 'EcoPackage', logo: 'https://images.unsplash.com/photo-1584664270205-aa5f3e12b6cd?q=80&w=580&auto=format&fit=crop' },
   ];
 
   const testimonials = [
@@ -178,7 +178,7 @@ const Partners = () => {
             </div>
             <div className="flex justify-center">
               <img 
-                src="/placeholder.svg" 
+                src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=1170&auto=format&fit=crop" 
                 alt="Brand Collaboration" 
                 className="rounded-lg shadow-lg max-w-full h-auto" 
               />
@@ -276,7 +276,7 @@ const Partners = () => {
                   <img 
                     src={partner.logo} 
                     alt={partner.name} 
-                    className="h-16 w-auto mx-auto mb-2" 
+                    className="h-16 w-auto mx-auto mb-2 object-cover rounded" 
                   />
                   <p className="text-sm font-medium">{partner.name}</p>
                 </div>
@@ -381,7 +381,7 @@ const Partners = () => {
               </div>
               <div className="bg-gray-100 flex items-center justify-center">
                 <img 
-                  src="/placeholder.svg" 
+                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1170&auto=format&fit=crop" 
                   alt="Success Story" 
                   className="w-full h-full object-cover" 
                 />
