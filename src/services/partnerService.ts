@@ -40,7 +40,7 @@ export async function submitPartnerApplication(data: PartnerFormData) {
         console.error('Failed to upload brand deck:', uploadResult.error);
         toast({
           title: "File Upload Failed",
-          description: `Could not upload brand deck: ${uploadResult.error}`,
+          description: uploadResult.error ? uploadResult.error.toString() : "Unknown upload error",
           variant: "destructive"
         });
         return { success: false, error: uploadResult.error };

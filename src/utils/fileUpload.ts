@@ -125,7 +125,10 @@ export async function uploadMultipleFilesToBucket(
     const fileName = `${fileNamePrefix}${fileNamePrefix ? '-' : ''}${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
     
     const result = await uploadFileToBucket(bucketName, file, path, fileName);
-    results.push(result);
+    results.push({
+      fileName: file.name,
+      ...result
+    });
   }
   
   return results;
