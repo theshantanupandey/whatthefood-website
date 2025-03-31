@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -92,8 +93,8 @@ const Footer = () => {
               <Link to="/vendors" className="text-muted-foreground hover:text-primary transition-colors">
                 Vendors
               </Link>
-              <Link to="/partners" className="text-muted-foreground hover:text-primary transition-colors">
-                Partners
+              <Link to="/customize" className="text-muted-foreground hover:text-primary transition-colors">
+                Customize
               </Link>
             </nav>
           </div>
