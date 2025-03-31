@@ -24,8 +24,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "@/components/ui/use-toast";
-import { ArrowRight, AlertCircle, Upload, X } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { ArrowRight, AlertCircle, Upload, X, FileIcon } from "lucide-react";
 import { submitJobApplication } from "@/services/careerService";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -542,7 +542,7 @@ const JoinUs: React.FC = () => {
                                           
                                           {selectedFile.type === 'application/pdf' && (
                                             <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-sm">
-                                              <File className="h-5 w-5 text-primary" />
+                                              <FileIcon className="h-5 w-5 text-primary" />
                                               <span className="text-sm">PDF Document</span>
                                             </div>
                                           )}
@@ -550,7 +550,7 @@ const JoinUs: React.FC = () => {
                                           {(selectedFile.type === 'application/msword' || 
                                             selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') && (
                                             <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-sm">
-                                              <File className="h-5 w-5 text-primary" />
+                                              <FileIcon className="h-5 w-5 text-primary" />
                                               <span className="text-sm">Word Document</span>
                                             </div>
                                           )}

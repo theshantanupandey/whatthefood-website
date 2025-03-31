@@ -1,6 +1,7 @@
+
 import { supabase } from '@/lib/supabase';
 import { uploadFileToBucket } from '@/utils/fileUpload';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 export interface PartnerFormData {
   brandName: string;
@@ -37,6 +38,12 @@ export async function submitPartnerApplication(data: PartnerFormData) {
         console.log(`Successfully uploaded brand deck: ${brandDeckUrl}`);
       } else {
         console.error('Failed to upload brand deck:', uploadResult.error);
+        toast({
+          title: "File Upload Failed",
+          description: `Could not upload brand deck: ${uploadResult.error}`,
+          variant: "destructive"
+        });
+        return { success: false, error: uploadResult.error };
       }
     }
     
@@ -63,27 +70,26 @@ export async function submitPartnerApplication(data: PartnerFormData) {
     if (error) {
       console.error('Error submitting partner application:', error);
       toast({
-        title: 'Submission Failed',
-        description: 'There was an error submitting your application. Please try again.',
-        variant: 'destructive',
+        title: "Submission Failed",
+        description: error.message,
+        variant: "destructive",
       });
-      return { success: false, error };
+      return { success: false, error: error.message };
     }
     
     console.log('Partner application submitted successfully:', insertedData);
     toast({
-      title: 'Application Submitted',
-      description: 'Your partner application has been submitted successfully. We will contact you soon!',
-      variant: 'default',
+      title: "Application Submitted",
+      description: "Your partner application has been submitted successfully. We will contact you soon!",
     });
     
     return { success: true, data: insertedData };
   } catch (error) {
     console.error('Unexpected error during partner application submission:', error);
     toast({
-      title: 'Submission Failed',
-      description: 'An unexpected error occurred. Please try again later.',
-      variant: 'destructive',
+      title: "Submission Failed",
+      description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again later.",
+      variant: "destructive",
     });
     return { 
       success: false, 
