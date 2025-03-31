@@ -181,10 +181,8 @@ const VendorApplication = () => {
       if (kitchenPhotos.length > 0) {
         const kitchenValidation = validateFiles(kitchenPhotos);
         if (!kitchenValidation.valid) {
-          toast({
-            title: 'Kitchen Photos Error',
+          toast.error("Kitchen Photos Error", {
             description: kitchenValidation.error,
-            variant: 'destructive',
           });
           return;
         }
@@ -194,10 +192,8 @@ const VendorApplication = () => {
       if (foodPhotos.length > 0) {
         const foodValidation = validateFiles(foodPhotos);
         if (!foodValidation.valid) {
-          toast({
-            title: 'Food Photos Error',
+          toast.error("Food Photos Error", {
             description: foodValidation.error,
-            variant: 'destructive',
           });
           return;
         }
@@ -235,8 +231,7 @@ const VendorApplication = () => {
       const response = await submitVendorApplication(formData);
       
       if (response.success) {
-        toast({
-          title: 'Application Submitted',
+        toast.success('Application Submitted', {
           description: 'Your vendor application has been submitted successfully. We will contact you soon!',
         });
         // Only reset and navigate after successful toast
@@ -249,10 +244,8 @@ const VendorApplication = () => {
       }
     } catch (error) {
       console.error("Error submitting vendor application:", error);
-      toast({
-        title: 'Submission Failed',
+      toast.error('Submission Failed', {
         description: error instanceof Error ? error.message : 'An unexpected error occurred',
-        variant: 'destructive',
       });
     } finally {
       setSubmitting(false);
