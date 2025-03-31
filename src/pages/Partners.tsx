@@ -139,12 +139,12 @@ const Partners = () => {
   };
 
   const partners = [
-    { name: 'Organic Harvest', logo: 'https://images.unsplash.com/photo-1557844352-761f2548b646?q=80&w=580&auto=format&fit=crop' },
-    { name: 'FitLife Nutrition', logo: 'https://images.unsplash.com/photo-1576678927484-cc907957088c?q=80&w=580&auto=format&fit=crop' },
-    { name: 'Green Kitchen', logo: 'https://images.unsplash.com/photo-1546241072-48010ad2862c?q=80&w=580&auto=format&fit=crop' },
-    { name: 'Wellness Daily', logo: 'https://images.unsplash.com/photo-1591985666643-1eeff437b74e?q=80&w=580&auto=format&fit=crop' },
-    { name: 'Pure Protein', logo: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?q=80&w=580&auto=format&fit=crop' },
-    { name: 'EcoPackage', logo: 'https://images.unsplash.com/photo-1584664270205-aa5f3e12b6cd?q=80&w=580&auto=format&fit=crop' },
+    { name: 'Organic Harvest', logo: 'https://images.unsplash.com/photo-1587336123775-6d4176e36194?q=80&w=580&auto=format&fit=crop' },
+    { name: 'FitLife Nutrition', logo: 'https://images.unsplash.com/photo-1574339940092-a20deb352ec5?q=80&w=580&auto=format&fit=crop' },
+    { name: 'Green Kitchen', logo: 'https://images.unsplash.com/photo-1627905646269-7f034dcc7987?q=80&w=580&auto=format&fit=crop' },
+    { name: 'Wellness Daily', logo: 'https://images.unsplash.com/photo-1589544421314-2d8cfde721e0?q=80&w=580&auto=format&fit=crop' },
+    { name: 'Pure Protein', logo: 'https://images.unsplash.com/photo-1610725664285-7c57e6eeac3f?q=80&w=580&auto=format&fit=crop' },
+    { name: 'EcoPackage', logo: 'https://images.unsplash.com/photo-1625650484619-d6e7e92e1905?q=80&w=580&auto=format&fit=crop' },
   ];
 
   const testimonials = [
@@ -187,7 +187,7 @@ const Partners = () => {
             </div>
             <div className="flex justify-center">
               <img 
-                src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?q=80&w=1170&auto=format&fit=crop" 
+                src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?q=80&w=1170&auto=format&fit=crop" 
                 alt="Brand Collaboration" 
                 className="rounded-lg shadow-lg max-w-full h-auto" 
               />
@@ -390,7 +390,7 @@ const Partners = () => {
               </div>
               <div className="bg-gray-100 flex items-center justify-center">
                 <img 
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?q=80&w=1170&auto=format&fit=crop" 
+                  src="https://images.unsplash.com/photo-1556155092-490a1ba16284?q=80&w=1170&auto=format&fit=crop" 
                   alt="Success Story" 
                   className="w-full h-full object-cover" 
                 />
