@@ -26,6 +26,34 @@ export async function submitPartnerApplication(data: PartnerFormData) {
       console.log(`Uploading brand deck for ${data.brandName}...`);
       const brandNameSlug = data.brandName.replace(/\s+/g, '-').toLowerCase();
       
+      // First, check if the bucket exists and try to create it if it doesn't
+      const { data: buckets, error: bucketError } = await supabase.storage.listBuckets();
+      
+      if (bucketError) {
+        console.error('Error checking buckets:', bucketError);
+        return { success: false, error: bucketError };
+      }
+      
+      const bucketExists = buckets.some(bucket => bucket.name === 'partner-applications');
+      
+      if (!bucketExists) {
+        console.log('Partner applications bucket does not exist, creating...');
+        const { error: createError } = await supabase.storage.createBucket('partner-applications', {
+          public: true,
+          fileSizeLimit: 10485760, // 10MB
+        });
+        
+        if (createError) {
+          console.error('Failed to create partner-applications bucket:', createError);
+          toast({
+            title: "Setup Error",
+            description: "Failed to create storage bucket for file uploads.",
+            variant: "destructive"
+          });
+          return { success: false, error: createError };
+        }
+      }
+      
       const uploadResult = await uploadFileToBucket(
         'partner-applications',
         data.brandDeck,
@@ -62,6 +90,7 @@ export async function submitPartnerApplication(data: PartnerFormData) {
       brand_deck_url: brandDeckUrl
     });
     
+    // Use public access for inserts
     const { data: insertedData, error } = await supabase
       .from('partner_applications')
       .insert([
@@ -82,6 +111,15 @@ export async function submitPartnerApplication(data: PartnerFormData) {
     
     if (error) {
       console.error('Error submitting partner application:', error);
+      
+      // Detailed error logging for troubleshooting
+      if (error.code) {
+        console.error('Error code:', error.code);
+      }
+      if (error.details) {
+        console.error('Error details:', error.details);
+      }
+      
       // Check if it's an RLS error
       if (error.message && error.message.includes('policy')) {
         console.error('This appears to be an RLS policy error. Check your Supabase RLS policies for partner_applications table.');

@@ -19,24 +19,49 @@ export async function uploadFileToBucket(
   filePrefix: string = ''
 ): Promise<UploadResult> {
   try {
+    console.log(`Attempting to upload file to ${bucketName}/${folderPath}...`);
+    
+    // Check if bucket exists
+    try {
+      const { data: bucket, error: getBucketError } = await supabase.storage.getBucket(bucketName);
+      
+      if (getBucketError) {
+        console.error(`Error checking bucket ${bucketName}:`, getBucketError);
+        return { success: false, error: `Bucket ${bucketName} not accessible: ${getBucketError.message}` };
+      }
+      
+      console.log(`Bucket ${bucketName} exists:`, bucket);
+    } catch (e) {
+      console.error(`Exception checking bucket ${bucketName}:`, e);
+    }
+    
     const fileExt = file.name.split('.').pop();
     const fileName = `${filePrefix ? filePrefix + '-' : ''}${uuidv4()}.${fileExt}`;
     const filePath = folderPath ? `${folderPath}${fileName}` : fileName;
     
-    const { error } = await supabase.storage
+    console.log(`Uploading file to ${bucketName}/${filePath}...`);
+    
+    // Try to upload the file
+    const { error: uploadError } = await supabase.storage
       .from(bucketName)
       .upload(filePath, file, {
         cacheControl: '3600',
         upsert: false
       });
     
-    if (error) {
-      return { success: false, error: error.message };
+    if (uploadError) {
+      console.error(`Error uploading file to ${bucketName}/${filePath}:`, uploadError);
+      return { success: false, error: uploadError.message };
     }
     
+    console.log(`File uploaded successfully to ${bucketName}/${filePath}`);
+    
+    // Get public URL
     const { data } = supabase.storage
       .from(bucketName)
       .getPublicUrl(filePath);
+    
+    console.log(`Public URL generated: ${data.publicUrl}`);
     
     return { 
       success: true, 
@@ -44,6 +69,7 @@ export async function uploadFileToBucket(
       publicUrl: data.publicUrl 
     };
   } catch (error) {
+    console.error('Unexpected error during file upload:', error);
     return { 
       success: false,
       error: error instanceof Error ? error.message : 'An unknown error occurred during upload'

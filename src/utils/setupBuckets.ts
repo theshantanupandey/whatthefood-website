@@ -3,6 +3,8 @@ import { supabase } from '@/integrations/supabase/client';
 
 export async function ensureRequiredBuckets() {
   try {
+    console.log('Checking and setting up storage buckets...');
+    
     // Check if the buckets exist
     const { data: buckets, error } = await supabase.storage.listBuckets();
     
@@ -10,6 +12,8 @@ export async function ensureRequiredBuckets() {
       console.error('Error checking storage buckets:', error);
       return { success: false, error };
     }
+    
+    console.log('Current buckets:', buckets.map(b => b.name));
     
     // Check for vendor-applications bucket
     const vendorBucketExists = buckets.some(bucket => bucket.name === 'vendor-applications');
@@ -49,6 +53,24 @@ export async function ensureRequiredBuckets() {
       console.log('partner-applications bucket created successfully');
     } else {
       console.log('partner-applications bucket already exists');
+    }
+    
+    // Verify that the buckets are accessible
+    for (const bucketName of ['vendor-applications', 'partner-applications']) {
+      try {
+        console.log(`Testing access to ${bucketName} bucket...`);
+        const { data, error: accessError } = await supabase.storage.from(bucketName).list('', {
+          limit: 1,
+        });
+        
+        if (accessError) {
+          console.error(`Error accessing ${bucketName} bucket:`, accessError);
+        } else {
+          console.log(`Successfully accessed ${bucketName} bucket`);
+        }
+      } catch (e) {
+        console.error(`Exception testing access to ${bucketName} bucket:`, e);
+      }
     }
     
     return { success: true };
