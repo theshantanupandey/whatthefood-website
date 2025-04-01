@@ -1,75 +1,49 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
+/**
+ * Ensure required buckets exist in Supabase storage
+ */
 export async function ensureRequiredBuckets() {
   try {
     console.log('Checking and setting up storage buckets...');
     
-    // Check if the buckets exist
-    const { data: buckets, error } = await supabase.storage.listBuckets();
+    // List all buckets
+    const { data: buckets, error: listError } = await supabase.storage.listBuckets();
     
-    if (error) {
-      console.error('Error checking storage buckets:', error);
-      return { success: false, error };
+    if (listError) {
+      console.error('Error checking storage buckets:', listError);
+      return { success: false, error: listError };
     }
     
-    console.log('Current buckets:', buckets.map(b => b.name));
+    const bucketNames = buckets?.map(bucket => bucket.name) || [];
+    console.log('Current buckets:', bucketNames);
     
-    // Check for vendor-applications bucket
-    const vendorBucketExists = buckets.some(bucket => bucket.name === 'vendor-applications');
+    // Buckets that must exist
+    const requiredBuckets = [
+      { name: 'partner-applications', isPublic: true },
+      { name: 'vendor-applications', isPublic: true }
+    ];
     
-    if (!vendorBucketExists) {
-      console.log('Creating vendor-applications bucket...');
-      const { error: createError } = await supabase.storage.createBucket('vendor-applications', {
-        public: true,
-        fileSizeLimit: 10485760, // 10MB file size limit
-      });
-      
-      if (createError) {
-        console.error('Error creating vendor-applications bucket:', createError);
-        return { success: false, error: createError };
-      }
-      
-      console.log('vendor-applications bucket created successfully');
-    } else {
-      console.log('vendor-applications bucket already exists');
-    }
-    
-    // Check for partner-applications bucket
-    const partnerBucketExists = buckets.some(bucket => bucket.name === 'partner-applications');
-    
-    if (!partnerBucketExists) {
-      console.log('Creating partner-applications bucket...');
-      const { error: createError } = await supabase.storage.createBucket('partner-applications', {
-        public: true,
-        fileSizeLimit: 10485760, // 10MB file size limit
-      });
-      
-      if (createError) {
-        console.error('Error creating partner-applications bucket:', createError);
-        return { success: false, error: createError };
-      }
-      
-      console.log('partner-applications bucket created successfully');
-    } else {
-      console.log('partner-applications bucket already exists');
-    }
-    
-    // Verify that the buckets are accessible
-    for (const bucketName of ['vendor-applications', 'partner-applications']) {
-      try {
-        console.log(`Testing access to ${bucketName} bucket...`);
-        const { data, error: accessError } = await supabase.storage.from(bucketName).list('', {
-          limit: 1,
-        });
+    // Create any missing buckets
+    for (const bucket of requiredBuckets) {
+      if (!bucketNames.includes(bucket.name)) {
+        console.log(`Creating ${bucket.name} bucket...`);
+        const { error: createError } = await supabase.storage.createBucket(
+          bucket.name,
+          { 
+            public: bucket.isPublic,
+            fileSizeLimit: 10485760 // 10MB
+          }
+        );
         
-        if (accessError) {
-          console.error(`Error accessing ${bucketName} bucket:`, accessError);
+        if (createError) {
+          console.error(`Error creating ${bucket.name} bucket:`, createError);
         } else {
-          console.log(`Successfully accessed ${bucketName} bucket`);
+          console.log(`${bucket.name} bucket created successfully`);
         }
-      } catch (e) {
-        console.error(`Exception testing access to ${bucketName} bucket:`, e);
+      } else {
+        console.log(`${bucket.name} bucket already exists`);
       }
     }
     
@@ -78,7 +52,7 @@ export async function ensureRequiredBuckets() {
     console.error('Unexpected error setting up buckets:', error);
     return { 
       success: false, 
-      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      error: error instanceof Error ? error.message : 'An unknown error occurred'
     };
   }
 }

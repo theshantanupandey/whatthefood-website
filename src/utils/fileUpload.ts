@@ -21,32 +21,20 @@ export async function uploadFileToBucket(
   try {
     console.log(`Attempting to upload file to ${bucketName}/${folderPath}...`);
     
-    // Check if bucket exists
-    try {
-      const { data: bucket, error: getBucketError } = await supabase.storage.getBucket(bucketName);
-      
-      if (getBucketError) {
-        console.error(`Error checking bucket ${bucketName}:`, getBucketError);
-        return { success: false, error: `Bucket ${bucketName} not accessible: ${getBucketError.message}` };
-      }
-      
-      console.log(`Bucket ${bucketName} exists:`, bucket);
-    } catch (e) {
-      console.error(`Exception checking bucket ${bucketName}:`, e);
-    }
-    
+    // Sanitize file name
     const fileExt = file.name.split('.').pop();
-    const fileName = `${filePrefix ? filePrefix + '-' : ''}${uuidv4()}.${fileExt}`;
-    const filePath = folderPath ? `${folderPath}${fileName}` : fileName;
+    const sanitizedPrefix = filePrefix.replace(/[^a-z0-9]/gi, '-').toLowerCase();
+    const fileName = `${sanitizedPrefix ? sanitizedPrefix + '-' : ''}${uuidv4()}.${fileExt}`;
+    const filePath = folderPath ? `${folderPath}/${fileName}` : fileName;
     
     console.log(`Uploading file to ${bucketName}/${filePath}...`);
     
-    // Try to upload the file
-    const { error: uploadError } = await supabase.storage
+    // Upload the file
+    const { data, error: uploadError } = await supabase.storage
       .from(bucketName)
       .upload(filePath, file, {
         cacheControl: '3600',
-        upsert: false
+        upsert: true // Use upsert to replace any existing file
       });
     
     if (uploadError) {
@@ -57,16 +45,16 @@ export async function uploadFileToBucket(
     console.log(`File uploaded successfully to ${bucketName}/${filePath}`);
     
     // Get public URL
-    const { data } = supabase.storage
+    const { data: publicUrlData } = supabase.storage
       .from(bucketName)
       .getPublicUrl(filePath);
     
-    console.log(`Public URL generated: ${data.publicUrl}`);
+    console.log(`Public URL generated: ${publicUrlData.publicUrl}`);
     
     return { 
       success: true, 
       path: filePath, 
-      publicUrl: data.publicUrl 
+      publicUrl: publicUrlData.publicUrl 
     };
   } catch (error) {
     console.error('Unexpected error during file upload:', error);
