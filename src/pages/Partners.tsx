@@ -69,6 +69,7 @@ type FormValues = z.infer<typeof formSchema>;
 const Partners = () => {
   const { toast } = useToast();
   const [file, setFile] = useState<File | null>(null);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   
   useEffect(() => {
     ensureRequiredBuckets().catch(err => {
@@ -99,6 +100,8 @@ const Partners = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
+      setSubmitting(true);
+      
       const formData: PartnerFormData = {
         brandName: data.brandName,
         website: data.website,
@@ -135,6 +138,8 @@ const Partners = () => {
         description: "An unexpected error occurred. Please try again later.",
         variant: "destructive",
       });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -629,7 +634,13 @@ const Partners = () => {
                     )}
                   />
                   
-                  <Button type="submit" className="w-full">Submit Partnership Application</Button>
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={submitting}
+                  >
+                    {submitting ? "Submitting..." : "Submit Partnership Application"}
+                  </Button>
                 </form>
               </Form>
             </CardContent>
