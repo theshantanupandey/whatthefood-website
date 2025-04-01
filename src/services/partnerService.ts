@@ -49,6 +49,19 @@ export async function submitPartnerApplication(data: PartnerFormData) {
     
     // Insert partner application data into the database
     console.log('Inserting partner application data into database...');
+    console.log('Data being inserted:', {
+      brand_name: data.brandName,
+      website: data.website,
+      industry_type: data.industryType,
+      contact_name: data.contactName,
+      email: data.email,
+      phone: data.phone,
+      collaboration_types: data.collaborationTypes,
+      additional_info: data.additionalInfo || null,
+      terms_agreed: data.termsAgreed,
+      brand_deck_url: brandDeckUrl
+    });
+    
     const { data: insertedData, error } = await supabase
       .from('partner_applications')
       .insert([
@@ -69,11 +82,21 @@ export async function submitPartnerApplication(data: PartnerFormData) {
     
     if (error) {
       console.error('Error submitting partner application:', error);
-      toast({
-        title: "Submission Failed",
-        description: error.message,
-        variant: "destructive",
-      });
+      // Check if it's an RLS error
+      if (error.message && error.message.includes('policy')) {
+        console.error('This appears to be an RLS policy error. Check your Supabase RLS policies for partner_applications table.');
+        toast({
+          title: "Submission Failed - Permission Error",
+          description: "You don't have permission to submit applications. This is likely a configuration issue. Please contact support.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Submission Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
       return { success: false, error: error.message };
     }
     
