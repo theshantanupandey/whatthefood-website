@@ -17,9 +17,8 @@ import {
   Phone,
   Linkedin
 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { submitPartnerApplication, PartnerFormData } from '@/services/partnerService';
-import { ensureRequiredBuckets } from '@/utils/setupBuckets';
 
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -67,7 +66,6 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 const Partners = () => {
-  const { toast } = useToast();
   const [file, setFile] = useState<File | null>(null);
   
   useEffect(() => {
@@ -117,23 +115,18 @@ const Partners = () => {
       if (response.success) {
         form.reset();
         setFile(null);
-        toast({
-          title: "Application Submitted",
-          description: "Your partnership application has been submitted successfully. We'll be in touch soon!",
+        toast.success('Application Submitted', {
+          description: 'Your partnership application has been submitted successfully. We\'ll be in touch soon!'
         });
       } else {
-        toast({
-          title: "Submission Failed",
-          description: response.error ? String(response.error) : "There was an error submitting your application. Please try again.",
-          variant: "destructive",
+        toast.error('Submission Failed', {
+          description: response.error ? String(response.error) : 'There was an error submitting your application. Please try again.'
         });
       }
     } catch (error) {
       console.error("Error submitting partnership application:", error);
-      toast({
-        title: "Submission Error",
-        description: error instanceof Error ? error.message : "An unexpected error occurred",
-        variant: "destructive",
+      toast.error('Submission Error', {
+        description: error instanceof Error ? error.message : 'An unexpected error occurred'
       });
     }
   };

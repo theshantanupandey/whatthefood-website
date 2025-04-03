@@ -39,45 +39,6 @@ export type Database = {
         }
         Relationships: []
       }
-      job_applications: {
-        Row: {
-          cover_letter: string | null
-          created_at: string | null
-          email: string
-          full_name: string
-          id: string
-          phone: string | null
-          portfolio: string | null
-          position: string
-          resume_url: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          cover_letter?: string | null
-          created_at?: string | null
-          email: string
-          full_name: string
-          id?: string
-          phone?: string | null
-          portfolio?: string | null
-          position: string
-          resume_url?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          cover_letter?: string | null
-          created_at?: string | null
-          email?: string
-          full_name?: string
-          id?: string
-          phone?: string | null
-          portfolio?: string | null
-          position?: string
-          resume_url?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
       newsletter_subscriptions: {
         Row: {
           created_at: string | null

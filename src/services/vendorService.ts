@@ -1,7 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { uploadFileToBucket, uploadMultipleFilesToBucket } from '@/utils/fileUpload';
 import { toast } from 'sonner';
+import { uploadFile, uploadMultipleFiles } from '@/integrations/supabase/storage';
 
 export interface VendorFormData {
   businessName: string;
@@ -42,23 +42,25 @@ export async function submitVendorApplication(data: VendorFormData) {
       console.log(`Uploading ${data.kitchenPhotos.length} kitchen photos...`);
       const businessNameSlug = data.businessName.replace(/\s+/g, '-').toLowerCase();
       
-      const uploadResults = await uploadMultipleFilesToBucket(
+      const uploadResults = await uploadMultipleFiles(
         'vendor-applications',
         data.kitchenPhotos,
         'kitchen_photos/',
         `kitchen-${businessNameSlug}`
       );
       
+      // Extract successful upload URLs
+      kitchenPhotoUrls = uploadResults
+        .filter(result => result.success)
+        .map(result => result.publicUrl);
+      
+      console.log(`Successfully uploaded ${kitchenPhotoUrls.length} kitchen photos`);
+      
       // Check for any upload failures
       const failedUploads = uploadResults.filter(result => !result.success);
       if (failedUploads.length > 0) {
-        const errors = failedUploads.map(result => result.error).join(', ');
-        throw new Error(`Failed to upload some kitchen photos: ${errors}`);
+        console.warn(`Failed to upload ${failedUploads.length} kitchen photos`);
       }
-      
-      // Extract successful upload URLs
-      kitchenPhotoUrls = uploadResults.map(result => result.publicUrl);
-      console.log(`Successfully uploaded ${kitchenPhotoUrls.length} kitchen photos`);
     }
     
     // Upload food photos if provided
@@ -67,23 +69,25 @@ export async function submitVendorApplication(data: VendorFormData) {
       console.log(`Uploading ${data.foodPhotos.length} food photos...`);
       const businessNameSlug = data.businessName.replace(/\s+/g, '-').toLowerCase();
       
-      const uploadResults = await uploadMultipleFilesToBucket(
+      const uploadResults = await uploadMultipleFiles(
         'vendor-applications',
         data.foodPhotos,
         'food_photos/',
         `food-${businessNameSlug}`
       );
       
+      // Extract successful upload URLs
+      foodPhotoUrls = uploadResults
+        .filter(result => result.success)
+        .map(result => result.publicUrl);
+      
+      console.log(`Successfully uploaded ${foodPhotoUrls.length} food photos`);
+      
       // Check for any upload failures
       const failedUploads = uploadResults.filter(result => !result.success);
       if (failedUploads.length > 0) {
-        const errors = failedUploads.map(result => result.error).join(', ');
-        throw new Error(`Failed to upload some food photos: ${errors}`);
+        console.warn(`Failed to upload ${failedUploads.length} food photos`);
       }
-      
-      // Extract successful upload URLs
-      foodPhotoUrls = uploadResults.map(result => result.publicUrl);
-      console.log(`Successfully uploaded ${foodPhotoUrls.length} food photos`);
     }
     
     // Insert vendor application data into the database
@@ -125,9 +129,9 @@ export async function submitVendorApplication(data: VendorFormData) {
     if (error) {
       console.error('Error submitting vendor application:', error);
       toast.error('Submission Failed', {
-        description: 'There was an error submitting your application. Please try again.'
+        description: error.message || 'There was an error submitting your application. Please try again.'
       });
-      return { success: false, error };
+      return { success: false, error: error.message };
     }
     
     console.log('Vendor application submitted successfully:', insertedData);
