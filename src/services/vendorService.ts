@@ -16,9 +16,9 @@ export interface VendorFormData {
   mealsPerDay: number;
   cuisines: string[];
   vegetarianOptions: boolean;
-  deliveryOptions: string[];
+  deliveryOptions: string[]; // Added missing property
   mealTypes: string[];
-  healthCertifications: string[];
+  healthCertifications: string[]; // Added missing property
   kitchenPhotos?: File[];
   foodPhotos?: File[];
   additionalInfo?: string;
