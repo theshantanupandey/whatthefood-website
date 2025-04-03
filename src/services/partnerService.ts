@@ -1,3 +1,4 @@
+
 import { supabase } from '@/lib/supabase';
 import { uploadFileToBucket } from '@/utils/fileUpload';
 import { toast } from '@/components/ui/use-toast';
@@ -64,10 +65,13 @@ export async function submitPartnerApplication(data: PartnerFormData) {
       console.error('Error submitting partner application:', error);
       toast({
         title: 'Submission Failed',
-        description: 'There was an error submitting your application. Please try again.',
+        description: error.message || 'There was an error submitting your application. Please try again.',
         variant: 'destructive',
       });
-      return { success: false, error };
+      return { 
+        success: false, 
+        error: error.message || 'Database error occurred' 
+      };
     }
     
     console.log('Partner application submitted successfully:', insertedData);
@@ -80,14 +84,17 @@ export async function submitPartnerApplication(data: PartnerFormData) {
     return { success: true, data: insertedData };
   } catch (error) {
     console.error('Unexpected error during partner application submission:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    
     toast({
       title: 'Submission Failed',
       description: 'An unexpected error occurred. Please try again later.',
       variant: 'destructive',
     });
+    
     return { 
       success: false, 
-      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+      error: errorMessage 
     };
   }
 }

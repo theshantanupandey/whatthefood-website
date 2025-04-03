@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -138,20 +139,27 @@ const FormSubmissionTester: React.FC = () => {
           throw new Error('Invalid form type');
       }
       
+      // Ensure error is a string, not an object
+      const errorMessage = response.error && typeof response.error === 'object' 
+        ? JSON.stringify(response.error) 
+        : response.error;
+      
       setResult({
         success: response.success,
-        message: response.message,
+        message: response.message || (response.success ? 'Success!' : 'Operation failed.'),
         data: response.data,
-        error: response.error
+        error: errorMessage
       });
       
       console.log(`${activeTab} form submission result:`, response);
     } catch (error) {
       console.error(`Error submitting ${activeTab} form:`, error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
       setResult({
         success: false,
         message: 'An unexpected error occurred',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: errorMessage
       });
     } finally {
       setIsSubmitting(false);
