@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from '@/lib/zod-shim';
-import { toast } from 'sonner';
+import { toast as sonnerToast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AnimatedSection from '@/components/ui/AnimatedSection';
@@ -125,7 +126,6 @@ const VendorApplication = () => {
   const [kitchenPhotos, setKitchenPhotos] = useState<File[]>([]);
   const [foodPhotos, setFoodPhotos] = useState<File[]>([]);
   
-  // Ensure buckets exist when component mounts
   useEffect(() => {
     ensureRequiredBuckets().catch(err => {
       console.error('Error setting up buckets:', err);
@@ -177,12 +177,10 @@ const VendorApplication = () => {
     setIsUploading(true);
     
     try {
-      // Validate kitchen photos
       if (kitchenPhotos.length > 0) {
         const kitchenValidation = validateFiles(kitchenPhotos);
         if (!kitchenValidation.valid) {
           toast({
-            title: 'Kitchen Photos Error',
             description: kitchenValidation.error,
             variant: 'destructive',
           });
@@ -190,12 +188,10 @@ const VendorApplication = () => {
         }
       }
 
-      // Validate food photos
       if (foodPhotos.length > 0) {
         const foodValidation = validateFiles(foodPhotos);
         if (!foodValidation.valid) {
           toast({
-            title: 'Food Photos Error',
             description: foodValidation.error,
             variant: 'destructive',
           });
@@ -235,11 +231,9 @@ const VendorApplication = () => {
       const response = await submitVendorApplication(formData);
       
       if (response.success) {
-        toast({
-          title: 'Application Submitted',
+        sonnerToast({
           description: 'Your vendor application has been submitted successfully. We will contact you soon!',
         });
-        // Only reset and navigate after successful toast
         setTimeout(() => {
           form.reset();
           setKitchenPhotos([]);
@@ -250,7 +244,6 @@ const VendorApplication = () => {
     } catch (error) {
       console.error("Error submitting vendor application:", error);
       toast({
-        title: 'Submission Failed',
         description: error instanceof Error ? error.message : 'An unexpected error occurred',
         variant: 'destructive',
       });
@@ -276,7 +269,6 @@ const VendorApplication = () => {
         ? prev.filter(m => m !== mealType)
         : [...prev, mealType];
       
-      // Update form value with the new array
       form.setValue('mealTypes', newMealTypes);
       
       return newMealTypes;
@@ -558,7 +550,6 @@ const VendorApplication = () => {
                                           ? prev.filter(c => c !== cuisine)
                                           : [...prev, cuisine];
                                         
-                                        // Update form value with the new array
                                         form.setValue('cuisines', newCuisines);
                                         
                                         return newCuisines;
