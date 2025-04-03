@@ -1,3 +1,4 @@
+
 import { supabase } from '@/lib/supabase';
 
 export interface ContactFormData {
@@ -7,29 +8,33 @@ export interface ContactFormData {
   message: string;
 }
 
-export interface ContactSubmissionResult {
+export interface SubmissionResult {
   success: boolean;
-  message: string;
+  message?: string;
   data?: any;
-  error?: any;
+  error?: string;
 }
 
-export async function submitContactForm(data: ContactFormData): Promise<ContactSubmissionResult> {
+export async function submitContactForm(data: ContactFormData): Promise<SubmissionResult> {
   try {
-    console.log('Submitting contact form data...');
+    console.log('Submitting contact form...');
+    
     const { data: result, error } = await supabase
       .from('contact_submissions')
       .insert([{
         name: data.name,
         email: data.email,
         subject: data.subject,
-        message: data.message,
-        created_at: new Date().toISOString()
-      }]);
+        message: data.message
+      }])
+      .select();
 
     if (error) {
       console.error('Error submitting contact form:', error);
-      throw error;
+      return {
+        success: false,
+        error: error.message || 'Database error occurred'
+      };
     }
 
     console.log('Contact form submitted successfully!');
@@ -39,10 +44,9 @@ export async function submitContactForm(data: ContactFormData): Promise<ContactS
       data: result
     };
   } catch (error) {
-    console.error('Error submitting contact form:', error);
+    console.error('Unexpected error submitting contact form:', error);
     return {
       success: false,
-      message: 'There was an error submitting your message. Please try again later.',
       error: error instanceof Error ? error.message : 'An unknown error occurred'
     };
   }

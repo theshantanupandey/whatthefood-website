@@ -1,6 +1,7 @@
+
 import { supabase } from '@/lib/supabase';
-import { uploadFileToBucket, uploadMultipleFilesToBucket } from '@/utils/fileUpload';
-import { toast } from '@/components/ui/use-toast';
+import { uploadMultipleFilesToBucket } from '@/utils/fileUpload';
+import { toast } from '@/hooks/use-toast';
 
 export interface VendorFormData {
   businessName: string;
@@ -31,32 +32,47 @@ export interface VendorFormData {
   additionalComments?: string;
 }
 
-export async function submitVendorApplication(data: VendorFormData) {
+export interface SubmissionResult {
+  success: boolean;
+  data?: any;
+  error?: string;
+}
+
+export async function submitVendorApplication(data: VendorFormData): Promise<SubmissionResult> {
   try {
-    console.log('Starting vendor application submission process...');
+    console.log('Starting vendor application submission...');
     
     // Upload kitchen photos if provided
     let kitchenPhotoUrls: string[] = [];
     if (data.kitchenPhotos && data.kitchenPhotos.length > 0) {
       console.log(`Uploading ${data.kitchenPhotos.length} kitchen photos...`);
-      const businessNameSlug = data.businessName.replace(/\s+/g, '-').toLowerCase();
+      
+      const businessNameSlug = data.businessName.toLowerCase().replace(/\s+/g, '-');
       
       const uploadResults = await uploadMultipleFilesToBucket(
         'vendor-applications',
         data.kitchenPhotos,
         'kitchen_photos/',
-        `kitchen-${businessNameSlug}`
+        `${businessNameSlug}-kitchen`
       );
       
-      // Check for any upload failures
+      // Check for upload errors
       const failedUploads = uploadResults.filter(result => !result.success);
       if (failedUploads.length > 0) {
-        const errors = failedUploads.map(result => result.error).join(', ');
-        throw new Error(`Failed to upload some kitchen photos: ${errors}`);
+        const errorMsg = `Failed to upload ${failedUploads.length} kitchen photos`;
+        console.error(errorMsg, failedUploads);
+        toast({
+          description: errorMsg,
+          variant: 'destructive'
+        });
+        return { success: false, error: errorMsg };
       }
       
-      // Extract successful upload URLs
-      kitchenPhotoUrls = uploadResults.map(result => result.publicUrl);
+      // Extract URLs from successful uploads
+      kitchenPhotoUrls = uploadResults
+        .filter(result => result.success && result.publicUrl)
+        .map(result => result.publicUrl as string);
+      
       console.log(`Successfully uploaded ${kitchenPhotoUrls.length} kitchen photos`);
     }
     
@@ -64,29 +80,37 @@ export async function submitVendorApplication(data: VendorFormData) {
     let foodPhotoUrls: string[] = [];
     if (data.foodPhotos && data.foodPhotos.length > 0) {
       console.log(`Uploading ${data.foodPhotos.length} food photos...`);
-      const businessNameSlug = data.businessName.replace(/\s+/g, '-').toLowerCase();
+      
+      const businessNameSlug = data.businessName.toLowerCase().replace(/\s+/g, '-');
       
       const uploadResults = await uploadMultipleFilesToBucket(
         'vendor-applications',
         data.foodPhotos,
         'food_photos/',
-        `food-${businessNameSlug}`
+        `${businessNameSlug}-food`
       );
       
-      // Check for any upload failures
+      // Check for upload errors
       const failedUploads = uploadResults.filter(result => !result.success);
       if (failedUploads.length > 0) {
-        const errors = failedUploads.map(result => result.error).join(', ');
-        throw new Error(`Failed to upload some food photos: ${errors}`);
+        const errorMsg = `Failed to upload ${failedUploads.length} food photos`;
+        console.error(errorMsg, failedUploads);
+        toast({
+          description: errorMsg,
+          variant: 'destructive'
+        });
+        return { success: false, error: errorMsg };
       }
       
-      // Extract successful upload URLs
-      foodPhotoUrls = uploadResults.map(result => result.publicUrl);
+      // Extract URLs from successful uploads
+      foodPhotoUrls = uploadResults
+        .filter(result => result.success && result.publicUrl)
+        .map(result => result.publicUrl as string);
+      
       console.log(`Successfully uploaded ${foodPhotoUrls.length} food photos`);
     }
     
-    // Insert vendor application data into the database
-    console.log('Inserting vendor application data into database...');
+    // Insert into database
     const { data: insertedData, error } = await supabase
       .from('vendor_applications')
       .insert([
@@ -116,39 +140,35 @@ export async function submitVendorApplication(data: VendorFormData) {
           existing_delivery: data.existingDelivery,
           why_partner: data.whyPartner,
           fssai_standards: data.fssaiStandards,
-          additional_comments: data.additionalComments || null,
+          additional_comments: data.additionalComments || null
         }
       ])
       .select();
     
     if (error) {
-      console.error('Error submitting vendor application:', error);
+      const errorMsg = `Database error: ${error.message || 'Unknown error'}`;
+      console.error('Vendor application submission error:', error);
       toast({
-        title: 'Submission Failed',
-        description: 'There was an error submitting your application. Please try again.',
-        variant: 'destructive',
+        description: errorMsg,
+        variant: 'destructive'
       });
-      return { success: false, error };
+      return { success: false, error: errorMsg };
     }
     
-    console.log('Vendor application submitted successfully:', insertedData);
+    console.log('Vendor application submitted successfully');
     toast({
-      title: 'Application Submitted',
-      description: 'Your vendor application has been submitted successfully. We will contact you soon!',
-      variant: 'default',
+      description: 'Your vendor application has been submitted successfully!',
     });
     
     return { success: true, data: insertedData };
+    
   } catch (error) {
-    console.error('Unexpected error during vendor application submission:', error);
+    const errorMsg = error instanceof Error ? error.message : 'An unexpected error occurred';
+    console.error('Unexpected error submitting vendor application:', error);
     toast({
-      title: 'Submission Failed',
-      description: 'An unexpected error occurred. Please try again later.',
-      variant: 'destructive',
+      description: errorMsg,
+      variant: 'destructive'
     });
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'An unknown error occurred' 
-    };
+    return { success: false, error: errorMsg };
   }
 }

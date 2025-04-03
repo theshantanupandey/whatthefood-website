@@ -16,9 +16,11 @@ export function Toaster() {
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {
         // Ensure description is always a string
-        const safeDescription = typeof description === 'object' 
-          ? JSON.stringify(description) 
-          : description;
+        const safeDescription = typeof description === 'string' 
+          ? description 
+          : description && typeof description === 'object'
+            ? JSON.stringify(description)
+            : '';
           
         return (
           <Toast key={id} {...props}>

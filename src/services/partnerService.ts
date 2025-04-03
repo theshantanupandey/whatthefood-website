@@ -1,7 +1,7 @@
 
 import { supabase } from '@/lib/supabase';
 import { uploadFileToBucket } from '@/utils/fileUpload';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 export interface PartnerFormData {
   brandName: string;
@@ -16,33 +16,46 @@ export interface PartnerFormData {
   brandDeck?: File;
 }
 
-export async function submitPartnerApplication(data: PartnerFormData) {
+export interface SubmissionResult {
+  success: boolean;
+  data?: any;
+  error?: string;
+}
+
+export async function submitPartnerApplication(data: PartnerFormData): Promise<SubmissionResult> {
   try {
-    console.log('Starting partner application submission process...');
+    console.log('Starting partner application submission...');
     
     // Upload brand deck if provided
     let brandDeckUrl = null;
     if (data.brandDeck) {
-      console.log(`Uploading brand deck for ${data.brandName}...`);
-      const brandNameSlug = data.brandName.replace(/\s+/g, '-').toLowerCase();
+      console.log(`Uploading brand deck: ${data.brandDeck.name}`);
+      
+      const brandNameSlug = data.brandName.toLowerCase().replace(/\s+/g, '-');
+      const fileName = `${brandNameSlug}-${Date.now()}`;
       
       const uploadResult = await uploadFileToBucket(
         'partner-applications',
         data.brandDeck,
         'brand_decks/',
-        `deck-${brandNameSlug}-${Date.now()}`
+        fileName
       );
       
-      if (uploadResult.success) {
-        brandDeckUrl = uploadResult.publicUrl;
-        console.log(`Successfully uploaded brand deck: ${brandDeckUrl}`);
-      } else {
-        console.error('Failed to upload brand deck:', uploadResult.error);
+      if (!uploadResult.success) {
+        const errorMsg = `Brand deck upload failed: ${uploadResult.error}`;
+        console.error(errorMsg);
+        toast({
+          description: errorMsg,
+          variant: 'destructive'
+        });
+        return { success: false, error: errorMsg };
       }
+      
+      brandDeckUrl = uploadResult.publicUrl;
+      console.log(`Brand deck uploaded: ${brandDeckUrl}`);
     }
     
-    // Insert partner application data into the database
-    console.log('Inserting partner application data into database...');
+    // Insert into database
     const { data: insertedData, error } = await supabase
       .from('partner_applications')
       .insert([
@@ -62,39 +75,29 @@ export async function submitPartnerApplication(data: PartnerFormData) {
       .select();
     
     if (error) {
-      console.error('Error submitting partner application:', error);
+      const errorMsg = `Database error: ${error.message || 'Unknown error'}`;
+      console.error('Partner application submission error:', error);
       toast({
-        title: 'Submission Failed',
-        description: error.message || 'There was an error submitting your application. Please try again.',
-        variant: 'destructive',
+        description: errorMsg,
+        variant: 'destructive'
       });
-      return { 
-        success: false, 
-        error: error.message || 'Database error occurred' 
-      };
+      return { success: false, error: errorMsg };
     }
     
-    console.log('Partner application submitted successfully:', insertedData);
+    console.log('Partner application submitted successfully');
     toast({
-      title: 'Application Submitted',
-      description: 'Your partner application has been submitted successfully. We will contact you soon!',
-      variant: 'default',
+      description: 'Your partner application has been submitted successfully!',
     });
     
     return { success: true, data: insertedData };
+    
   } catch (error) {
-    console.error('Unexpected error during partner application submission:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-    
+    const errorMsg = error instanceof Error ? error.message : 'An unexpected error occurred';
+    console.error('Unexpected error submitting partner application:', error);
     toast({
-      title: 'Submission Failed',
-      description: 'An unexpected error occurred. Please try again later.',
-      variant: 'destructive',
+      description: errorMsg,
+      variant: 'destructive'
     });
-    
-    return { 
-      success: false, 
-      error: errorMessage 
-    };
+    return { success: false, error: errorMsg };
   }
 }

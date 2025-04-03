@@ -1,72 +1,73 @@
-import { supabase } from '@/lib/supabase';
 
-/**
- * Test Supabase connection and bucket access
- */
+import { supabase } from '@/lib/supabase';
+import { ensureRequiredBuckets } from './setupBuckets';
+
 export async function testSupabaseConnection() {
+  const results: any = {
+    connection: false,
+    tables: {},
+    storage: {},
+  };
+
   try {
-    console.log('Testing Supabase connection...');
-    
-    // Test database connection
-    const { data, error, count } = await supabase
-      .from('newsletter_subscriptions')
-      .select('*', { count: 'exact' })
-      .limit(1);
+    // Test basic connection
+    console.log('Testing basic Supabase connection...');
+    const { error } = await supabase.from('newsletter_subscriptions')
+      .select('count(*)', { count: 'exact', head: true });
     
     if (error) {
-      console.error('Database connection error:', error);
-      return { success: false, error };
+      console.error('Connection test failed:', error);
+      results.connection = false;
+      results.error = error;
+      return results;
     }
     
-    console.log(`Database connection successful. Found ${count} newsletter subscriptions.`);
+    results.connection = true;
+    console.log('Connection test successful!');
     
-    // Test storage buckets
-    const buckets = ['partner-applications', 'vendor-applications'];
-    
-    for (const bucket of buckets) {
-      console.log(`Testing access to bucket: ${bucket}`);
-      
-      try {
-        const { data: bucketData, error: bucketError } = await supabase.storage.from(bucket).list();
-        
-        if (bucketError) {
-          console.error(`Error accessing bucket '${bucket}':`, bucketError);
-        } else {
-          console.log(`Bucket '${bucket}' exists and is accessible. Contains ${bucketData.length} files/folders.`);
-        }
-      } catch (bucketTestError) {
-        console.error(`Error testing bucket '${bucket}':`, bucketTestError);
-      }
-    }
-    
-    // Test tables
-    const tables = ['partner_applications', 'vendor_applications', 'contact_submissions', 'newsletter_subscriptions'];
+    // Check required tables
+    const tables = [
+      'newsletter_subscriptions',
+      'contact_submissions',
+      'partner_applications',
+      'vendor_applications'
+    ];
     
     for (const table of tables) {
-      console.log(`Testing access to table: ${table}`);
-      
       try {
-        const { data: tableData, error: tableError, count: tableCount } = await supabase
-          .from(table)
-          .select('*', { count: 'exact' })
-          .limit(1);
+        console.log(`Testing access to table: ${table}`);
+        const { error } = await supabase.from(table)
+          .select('count(*)', { count: 'exact', head: true });
         
-        if (tableError) {
-          console.error(`Error accessing table '${table}':`, tableError);
+        results.tables[table] = { exists: !error };
+        if (error) {
+          console.error(`Table '${table}' check failed:`, error);
         } else {
-          console.log(`Table '${table}' exists and is accessible. Found ${tableCount} records.`);
+          console.log(`Table '${table}' is accessible`);
         }
-      } catch (tableTestError) {
-        console.error(`Error testing table '${table}':`, tableTestError);
+      } catch (err) {
+        console.error(`Error checking table '${table}':`, err);
+        results.tables[table] = { exists: false, error: err };
       }
     }
     
-    return { success: true };
+    // Setup and check buckets
+    console.log('Setting up and testing storage buckets...');
+    const bucketsResult = await ensureRequiredBuckets();
+    results.storage = bucketsResult;
+    
+    return {
+      success: results.connection,
+      tables: results.tables,
+      storage: results.storage,
+      data: results
+    };
   } catch (error) {
-    console.error('Unexpected error testing Supabase:', error);
-    return { 
-      success: false, 
-      error: error instanceof Error ? error.message : 'An unknown error occurred' 
+    console.error('Unexpected error during Supabase test:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      data: results
     };
   }
 }

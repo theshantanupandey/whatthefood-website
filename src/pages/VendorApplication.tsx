@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -8,42 +8,8 @@ import { toast } from '@/hooks/use-toast';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AnimatedSection from '@/components/ui/AnimatedSection';
-import { Form } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Briefcase,
-  Phone,
-  Mail,
-  MapPin,
-  Utensils,
-  Calendar,
-  DollarSign,
-  File,
-  MessageSquare,
-  Check,
-  Upload,
-  ArrowRight,
-} from 'lucide-react';
-import { submitVendorApplication, VendorFormData } from '@/services/vendorService';
 import { ensureRequiredBuckets } from '@/utils/setupBuckets';
+import { submitVendorApplication } from '@/services/vendorService';
 
 const formSchema = z.object({
   businessName: z.string().min(2, { message: 'Business name is required' }),
@@ -116,7 +82,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_FILES = 5; // Maximum number of files per category
 
-const VendorApplication = () => {
+const VendorApplication: React.FC = () => {
   const navigate = useNavigate();
   const [formStep, setFormStep] = useState(0);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -172,8 +138,11 @@ const VendorApplication = () => {
     return { valid: true };
   };
 
-  const handleSubmit = async (data: FormValues) => {
-    setSubmitting(true);
+  const handleSubmit = async (formValues: z.infer<typeof formSchema>) => {
+    if (isUploading) {
+      return;
+    }
+    
     setIsUploading(true);
     
     try {
@@ -198,47 +167,27 @@ const VendorApplication = () => {
           return;
         }
       }
-
-      const formData: VendorFormData = {
-        businessName: data.businessName,
-        ownerName: data.ownerName,
-        businessType: data.businessType,
-        registrationNumber: data.registrationNumber,
-        gstNumber: data.gstNumber,
-        phone: data.phone,
-        email: data.email,
-        address: data.address,
-        cityState: data.cityState,
-        mealsPerDay: data.mealsPerDay,
-        cuisines: data.cuisines,
-        vegetarianOptions: data.vegetarianOptions,
-        deliveryOptions: [data.packagingOption || ''],
-        mealTypes: data.mealTypes,
-        healthCertifications: data.fssaiStandards ? ['FSSAI'] : [],
-        kitchenPhotos: kitchenPhotos,
-        foodPhotos: foodPhotos,
-        additionalInfo: data.additionalComments,
-        additionalComments: data.additionalComments,
-        termsAgreed: data.termsAgreed,
-        packagingOption: data.packagingOption,
-        priceRange: data.priceRange,
-        customizationWilling: data.customizationWilling,
-        existingDelivery: data.existingDelivery,
-        whyPartner: data.whyPartner,
-        fssaiStandards: data.fssaiStandards
+      
+      const formData = {
+        ...formValues,
+        kitchenPhotos: kitchenPhotos.length > 0 ? kitchenPhotos : undefined,
+        foodPhotos: foodPhotos.length > 0 ? foodPhotos : undefined,
       };
+      
+      console.log('Submitting vendor application form...', formData);
       
       const response = await submitVendorApplication(formData);
       
       if (response.success) {
-        sonnerToast({
-          description: 'Your vendor application has been submitted successfully. We will contact you soon!',
+        sonnerToast('Application Submitted', {
+          description: 'Your vendor application has been submitted successfully. We will contact you soon!'
         });
+        
         setTimeout(() => {
           form.reset();
           setKitchenPhotos([]);
           setFoodPhotos([]);
-          navigate('/');
+          navigate('/vendors');
         }, 2000);
       }
     } catch (error) {
@@ -248,7 +197,6 @@ const VendorApplication = () => {
         variant: 'destructive',
       });
     } finally {
-      setSubmitting(false);
       setIsUploading(false);
     }
   };
