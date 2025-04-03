@@ -75,7 +75,7 @@ const Partners = () => {
       
       if (response.success) {
         toast.success('Application Submitted!', {
-          description: 'Thank you for your interest in partnering with us. We'll be in touch shortly.'
+          description: "Thank you for your interest in partnering with us. We will be in touch shortly."
         });
         form.reset();
         setSelectedFile(null);
