@@ -1,10 +1,3 @@
-
--- Drop existing tables if they exist
-DROP TABLE IF EXISTS partner_applications CASCADE;
-DROP TABLE IF EXISTS vendor_applications CASCADE;
-DROP TABLE IF EXISTS contact_submissions CASCADE;
-DROP TABLE IF EXISTS newsletter_subscriptions CASCADE;
-
 -- Partner Applications Table
 CREATE TABLE partner_applications (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),

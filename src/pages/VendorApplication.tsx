@@ -1,28 +1,48 @@
-
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from '@/lib/zod-shim';
-import { sonner } from 'sonner';
-import { toast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AnimatedSection from '@/components/ui/AnimatedSection';
+import { Form } from '@/components/ui/form';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  Briefcase,
+  Phone,
+  Mail,
+  MapPin,
+  Utensils,
+  Calendar,
+  DollarSign,
+  File,
+  MessageSquare,
+  Check,
+  Upload,
+  ArrowRight,
+} from 'lucide-react';
+import { submitVendorApplication, VendorFormData } from '@/services/vendorService';
 import { ensureRequiredBuckets } from '@/utils/setupBuckets';
-import { submitVendorApplication } from '@/services/vendorService';
-
-// Import UI components
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Form } from "@/components/ui/form";
-
-// Import icons
-import { ArrowRight, Briefcase, Calendar, MessageSquare, Phone, Upload, Utensils } from "lucide-react";
 
 const formSchema = z.object({
   businessName: z.string().min(2, { message: 'Business name is required' }),
@@ -43,8 +63,6 @@ const formSchema = z.object({
   packagingOption: z.string({ required_error: 'Please select an option' }),
   
   mealTypes: z.array(z.string()).min(1, { message: 'Select at least one meal type' }),
-  deliveryOptions: z.array(z.string()).default([]), // Added missing property
-  healthCertifications: z.array(z.string()).default([]), // Added missing property
   priceRange: z.string({ required_error: 'Please select a price range' }),
   customizationWilling: z.boolean(),
   existingDelivery: z.boolean(),
@@ -97,7 +115,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_FILE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_FILES = 5; // Maximum number of files per category
 
-const VendorApplication: React.FC = () => {
+const VendorApplication = () => {
   const navigate = useNavigate();
   const [formStep, setFormStep] = useState(0);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -107,6 +125,7 @@ const VendorApplication: React.FC = () => {
   const [kitchenPhotos, setKitchenPhotos] = useState<File[]>([]);
   const [foodPhotos, setFoodPhotos] = useState<File[]>([]);
   
+  // Ensure buckets exist when component mounts
   useEffect(() => {
     ensureRequiredBuckets().catch(err => {
       console.error('Error setting up buckets:', err);
@@ -128,8 +147,6 @@ const VendorApplication: React.FC = () => {
       vegetarianOptions: false,
       fssaiStandards: false,
       mealTypes: [],
-      deliveryOptions: [], // Initialize with empty array
-      healthCertifications: [], // Initialize with empty array
       customizationWilling: false,
       existingDelivery: false,
       whyPartner: '',
@@ -155,18 +172,17 @@ const VendorApplication: React.FC = () => {
     return { valid: true };
   };
 
-  const handleSubmit = async (formValues: z.infer<typeof formSchema>) => {
-    if (isUploading) {
-      return;
-    }
-    
+  const handleSubmit = async (data: FormValues) => {
+    setSubmitting(true);
     setIsUploading(true);
     
     try {
+      // Validate kitchen photos
       if (kitchenPhotos.length > 0) {
         const kitchenValidation = validateFiles(kitchenPhotos);
         if (!kitchenValidation.valid) {
           toast({
+            title: 'Kitchen Photos Error',
             description: kitchenValidation.error,
             variant: 'destructive',
           });
@@ -174,48 +190,72 @@ const VendorApplication: React.FC = () => {
         }
       }
 
+      // Validate food photos
       if (foodPhotos.length > 0) {
         const foodValidation = validateFiles(foodPhotos);
         if (!foodValidation.valid) {
           toast({
+            title: 'Food Photos Error',
             description: foodValidation.error,
             variant: 'destructive',
           });
           return;
         }
       }
-      
-      const formData = {
-        ...formValues,
-        kitchenPhotos: kitchenPhotos.length > 0 ? kitchenPhotos : undefined,
-        foodPhotos: foodPhotos.length > 0 ? foodPhotos : undefined,
-        deliveryOptions: formValues.deliveryOptions || [], // Ensure deliveryOptions is defined
-        healthCertifications: formValues.healthCertifications || [], // Ensure healthCertifications is defined
+
+      const formData: VendorFormData = {
+        businessName: data.businessName,
+        ownerName: data.ownerName,
+        businessType: data.businessType,
+        registrationNumber: data.registrationNumber,
+        gstNumber: data.gstNumber,
+        phone: data.phone,
+        email: data.email,
+        address: data.address,
+        cityState: data.cityState,
+        mealsPerDay: data.mealsPerDay,
+        cuisines: data.cuisines,
+        vegetarianOptions: data.vegetarianOptions,
+        deliveryOptions: [data.packagingOption || ''],
+        mealTypes: data.mealTypes,
+        healthCertifications: data.fssaiStandards ? ['FSSAI'] : [],
+        kitchenPhotos: kitchenPhotos,
+        foodPhotos: foodPhotos,
+        additionalInfo: data.additionalComments,
+        additionalComments: data.additionalComments,
+        termsAgreed: data.termsAgreed,
+        packagingOption: data.packagingOption,
+        priceRange: data.priceRange,
+        customizationWilling: data.customizationWilling,
+        existingDelivery: data.existingDelivery,
+        whyPartner: data.whyPartner,
+        fssaiStandards: data.fssaiStandards
       };
-      
-      console.log('Submitting vendor application form...', formData);
       
       const response = await submitVendorApplication(formData);
       
       if (response.success) {
-        sonner.toast('Application Submitted', {
-          description: 'Your vendor application has been submitted successfully. We will contact you soon!'
+        toast({
+          title: 'Application Submitted',
+          description: 'Your vendor application has been submitted successfully. We will contact you soon!',
         });
-        
+        // Only reset and navigate after successful toast
         setTimeout(() => {
           form.reset();
           setKitchenPhotos([]);
           setFoodPhotos([]);
-          navigate('/vendors');
+          navigate('/');
         }, 2000);
       }
     } catch (error) {
       console.error("Error submitting vendor application:", error);
       toast({
+        title: 'Submission Failed',
         description: error instanceof Error ? error.message : 'An unexpected error occurred',
         variant: 'destructive',
       });
     } finally {
+      setSubmitting(false);
       setIsUploading(false);
     }
   };
@@ -236,6 +276,7 @@ const VendorApplication: React.FC = () => {
         ? prev.filter(m => m !== mealType)
         : [...prev, mealType];
       
+      // Update form value with the new array
       form.setValue('mealTypes', newMealTypes);
       
       return newMealTypes;
@@ -517,6 +558,7 @@ const VendorApplication: React.FC = () => {
                                           ? prev.filter(c => c !== cuisine)
                                           : [...prev, cuisine];
                                         
+                                        // Update form value with the new array
                                         form.setValue('cuisines', newCuisines);
                                         
                                         return newCuisines;
@@ -696,7 +738,7 @@ const VendorApplication: React.FC = () => {
                     {formStep === 4 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
-                          <div className="h-5 w-5 text-primary">📄</div>
+                          <File className="h-5 w-5 text-primary" />
                           <h2 className="text-xl font-semibold">Documents Upload</h2>
                           <span className="text-xs bg-accent text-muted-foreground px-2 py-0.5 rounded">Optional</span>
                         </div>
@@ -713,11 +755,9 @@ const VendorApplication: React.FC = () => {
                               </label>
                               <div
                                 className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
-                                onClick={() => document.getElementById('fssaiLicenseInput')!.click()}
+                                onClick={() => document.getElementById('fssaiLicenseInput').click()}
                               >
-                                <div className="h-6 w-6 mx-auto mb-2 text-muted-foreground">
-                                  <Upload className="h-6 w-6" />
-                                </div>
+                                <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
                                   Click to upload or drag and drop
                                 </p>
@@ -745,11 +785,9 @@ const VendorApplication: React.FC = () => {
                               </label>
                               <div
                                 className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
-                                onClick={() => document.getElementById('gstCertificateInput')!.click()}
+                                onClick={() => document.getElementById('gstCertificateInput').click()}
                               >
-                                <div className="h-6 w-6 mx-auto mb-2 text-muted-foreground">
-                                  <Upload className="h-6 w-6" />
-                                </div>
+                                <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
                                   Click to upload or drag and drop
                                 </p>
@@ -777,11 +815,9 @@ const VendorApplication: React.FC = () => {
                               </label>
                               <div
                                 className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
-                                onClick={() => document.getElementById('sampleMenuInput')!.click()}
+                                onClick={() => document.getElementById('sampleMenuInput').click()}
                               >
-                                <div className="h-6 w-6 mx-auto mb-2 text-muted-foreground">
-                                  <Upload className="h-6 w-6" />
-                                </div>
+                                <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
                                   Click to upload or drag and drop
                                 </p>
@@ -850,7 +886,7 @@ const VendorApplication: React.FC = () => {
                     {formStep === 6 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
-                          <div className="h-5 w-5 text-primary">📄</div>
+                          <File className="h-5 w-5 text-primary" />
                           <h2 className="text-xl font-semibold">Terms & Conditions</h2>
                         </div>
                         
