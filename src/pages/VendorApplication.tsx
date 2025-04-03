@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -35,7 +36,7 @@ import {
   Utensils,
   Calendar,
   DollarSign,
-  File,
+  FileText,
   MessageSquare,
   Check,
   Upload,
@@ -181,11 +182,11 @@ const VendorApplication = () => {
       if (kitchenPhotos.length > 0) {
         const kitchenValidation = validateFiles(kitchenPhotos);
         if (!kitchenValidation.valid) {
-          toast({
-            title: 'Kitchen Photos Error',
-            description: kitchenValidation.error,
-            variant: 'destructive',
+          toast.error("Kitchen Photos Error", {
+            description: kitchenValidation.error
           });
+          setSubmitting(false);
+          setIsUploading(false);
           return;
         }
       }
@@ -194,11 +195,11 @@ const VendorApplication = () => {
       if (foodPhotos.length > 0) {
         const foodValidation = validateFiles(foodPhotos);
         if (!foodValidation.valid) {
-          toast({
-            title: 'Food Photos Error',
-            description: foodValidation.error,
-            variant: 'destructive',
+          toast.error("Food Photos Error", {
+            description: foodValidation.error
           });
+          setSubmitting(false);
+          setIsUploading(false);
           return;
         }
       }
@@ -235,9 +236,8 @@ const VendorApplication = () => {
       const response = await submitVendorApplication(formData);
       
       if (response.success) {
-        toast({
-          title: 'Application Submitted',
-          description: 'Your vendor application has been submitted successfully. We will contact you soon!',
+        toast.success("Application Submitted", {
+          description: "Your vendor application has been submitted successfully. We will contact you soon!"
         });
         // Only reset and navigate after successful toast
         setTimeout(() => {
@@ -249,10 +249,8 @@ const VendorApplication = () => {
       }
     } catch (error) {
       console.error("Error submitting vendor application:", error);
-      toast({
-        title: 'Submission Failed',
-        description: error instanceof Error ? error.message : 'An unexpected error occurred',
-        variant: 'destructive',
+      toast.error("Submission Failed", {
+        description: error instanceof Error ? error.message : 'An unexpected error occurred'
       });
     } finally {
       setSubmitting(false);
@@ -738,7 +736,7 @@ const VendorApplication = () => {
                     {formStep === 4 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
-                          <File className="h-5 w-5 text-primary" />
+                          <FileText className="h-5 w-5 text-primary" />
                           <h2 className="text-xl font-semibold">Documents Upload</h2>
                           <span className="text-xs bg-accent text-muted-foreground px-2 py-0.5 rounded">Optional</span>
                         </div>
@@ -755,7 +753,7 @@ const VendorApplication = () => {
                               </label>
                               <div
                                 className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
-                                onClick={() => document.getElementById('fssaiLicenseInput').click()}
+                                onClick={() => document.getElementById('fssaiLicenseInput')?.click()}
                               >
                                 <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
@@ -785,7 +783,7 @@ const VendorApplication = () => {
                               </label>
                               <div
                                 className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
-                                onClick={() => document.getElementById('gstCertificateInput').click()}
+                                onClick={() => document.getElementById('gstCertificateInput')?.click()}
                               >
                                 <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
@@ -815,7 +813,7 @@ const VendorApplication = () => {
                               </label>
                               <div
                                 className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
-                                onClick={() => document.getElementById('sampleMenuInput').click()}
+                                onClick={() => document.getElementById('sampleMenuInput')?.click()}
                               >
                                 <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
@@ -886,7 +884,7 @@ const VendorApplication = () => {
                     {formStep === 6 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
-                          <File className="h-5 w-5 text-primary" />
+                          <FileText className="h-5 w-5 text-primary" />
                           <h2 className="text-xl font-semibold">Terms & Conditions</h2>
                         </div>
                         

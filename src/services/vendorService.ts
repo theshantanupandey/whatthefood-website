@@ -1,6 +1,7 @@
-import { supabase } from '@/lib/supabase';
+
+import { supabase } from '@/integrations/supabase/client';
 import { uploadFileToBucket, uploadMultipleFilesToBucket } from '@/utils/fileUpload';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 
 export interface VendorFormData {
   businessName: string;
@@ -123,28 +124,22 @@ export async function submitVendorApplication(data: VendorFormData) {
     
     if (error) {
       console.error('Error submitting vendor application:', error);
-      toast({
-        title: 'Submission Failed',
-        description: 'There was an error submitting your application. Please try again.',
-        variant: 'destructive',
+      toast.error('Submission Failed', {
+        description: 'There was an error submitting your application. Please try again.'
       });
       return { success: false, error };
     }
     
     console.log('Vendor application submitted successfully:', insertedData);
-    toast({
-      title: 'Application Submitted',
-      description: 'Your vendor application has been submitted successfully. We will contact you soon!',
-      variant: 'default',
+    toast.success('Application Submitted', {
+      description: 'Your vendor application has been submitted successfully. We will contact you soon!'
     });
     
     return { success: true, data: insertedData };
   } catch (error) {
     console.error('Unexpected error during vendor application submission:', error);
-    toast({
-      title: 'Submission Failed',
-      description: 'An unexpected error occurred. Please try again later.',
-      variant: 'destructive',
+    toast.error('Submission Failed', {
+      description: error instanceof Error ? error.message : 'An unexpected error occurred'
     });
     return { 
       success: false, 
