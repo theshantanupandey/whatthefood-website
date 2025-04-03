@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { uploadFileToBucket } from '@/utils/fileUpload';
 
@@ -50,7 +49,7 @@ const FileUploadTester: React.FC = () => {
       if (result.success) {
         setSuccessMessage(`File uploaded successfully! URL: ${result.publicUrl}`);
       } else {
-        setError(result.error ? result.error.toString() : 'An unknown error occurred during upload');
+        setError(typeof result.error === 'string' ? result.error : JSON.stringify(result.error));
       }
     } catch (err) {
       console.error('Error in upload:', err);

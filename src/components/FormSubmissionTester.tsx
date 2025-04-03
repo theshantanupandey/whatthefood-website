@@ -7,7 +7,6 @@ import { submitContactForm } from '@/services/contactService';
 import { submitPartnerApplication } from '@/services/partnerService';
 import { submitVendorApplication } from '@/services/vendorService';
 import { subscribeToNewsletter } from '@/services/newsletterService';
-import { supabase } from '@/integrations/supabase/client';
 
 const FormSubmissionTester: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'contact' | 'partner' | 'vendor' | 'newsletter'>('contact');

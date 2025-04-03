@@ -1,4 +1,3 @@
-
 -- Create job_applications table
 CREATE TABLE IF NOT EXISTS job_applications (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -22,14 +21,14 @@ CREATE INDEX IF NOT EXISTS job_applications_position_idx ON job_applications(pos
 -- Add RLS policies
 ALTER TABLE job_applications ENABLE ROW LEVEL SECURITY;
 
--- Allow anonymous users to insert applications - this is explicitly FOR INSERT
-CREATE POLICY "Allow anonymous insert to job_applications" ON job_applications 
-    FOR INSERT 
-    TO anon 
+-- Allow anonymous users to insert applications
+CREATE POLICY "Allow anonymous insert" ON job_applications
+    FOR INSERT
+    TO anon
     WITH CHECK (true);
 
 -- Only allow authenticated users to view applications
-CREATE POLICY "Allow authenticated users to view job_applications" ON job_applications
+CREATE POLICY "Allow authenticated users to view applications" ON job_applications
     FOR SELECT
     TO authenticated
     USING (true);
