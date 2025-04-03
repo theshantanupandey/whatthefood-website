@@ -117,15 +117,24 @@ const Partners = () => {
       if (response.success) {
         form.reset();
         setFile(null);
+        toast({
+          title: "Application Submitted",
+          description: "Your partnership application has been submitted successfully. We'll be in touch soon!",
+        });
       } else {
         toast({
           title: "Submission Failed",
-          description: response.error || "There was an error submitting your application. Please try again.",
+          description: response.error ? String(response.error) : "There was an error submitting your application. Please try again.",
           variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Error submitting partnership application:", error);
+      toast({
+        title: "Submission Error",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        variant: "destructive",
+      });
     }
   };
 
