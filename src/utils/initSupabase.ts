@@ -1,5 +1,6 @@
 
 import { setupStorageBuckets } from '@/integrations/supabase/storage';
+import React from 'react'; // Proper import of React
 
 /**
  * Initialize Supabase resources
