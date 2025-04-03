@@ -1,3 +1,4 @@
+
 import { supabase } from '@/lib/supabase';
 
 /**
@@ -28,31 +29,30 @@ export async function uploadFileToBucket(
 
     console.log(`Starting upload of file ${file.name} (${file.size} bytes) to bucket ${bucketName}`);
     
-    // Check if bucket exists first
-    console.log(`Checking if bucket '${bucketName}' exists...`);
-    const { data: bucketData, error: bucketError } = await supabase.storage.getBucket(bucketName);
-    
-    if (bucketError) {
-      console.error(`Error accessing bucket '${bucketName}':`, bucketError);
+    // Create bucket if it doesn't exist
+    console.log(`Ensuring bucket '${bucketName}' exists...`);
+    try {
+      const { error: bucketError } = await supabase.storage.getBucket(bucketName);
       
-      // Try to create the bucket if it doesn't exist
-      if (bucketError.message.includes('The resource was not found')) {
-        console.log(`Attempting to create bucket '${bucketName}'...`);
-        const { data: createData, error: createError } = await supabase.storage.createBucket(bucketName, {
-          public: true // Make bucket contents publicly accessible
+      if (bucketError) {
+        console.log(`Bucket '${bucketName}' not found, creating it...`);
+        const { error: createError } = await supabase.storage.createBucket(bucketName, {
+          public: true, // Make bucket contents publicly accessible
+          fileSizeLimit: 10485760 // 10MB limit
         });
         
         if (createError) {
           console.error(`Failed to create bucket '${bucketName}':`, createError);
-          return { success: false, error: createError };
+          return { success: false, error: createError.message };
         }
         
         console.log(`Successfully created bucket '${bucketName}'`);
       } else {
-        return { success: false, error: bucketError };
+        console.log(`Bucket '${bucketName}' exists`);
       }
-    } else {
-      console.log(`Bucket '${bucketName}' exists:`, bucketData);
+    } catch (err) {
+      console.error(`Error checking/creating bucket '${bucketName}':`, err);
+      // Continue anyway - the upload might still work if bucket exists
     }
     
     // Generate file name if not provided
@@ -80,7 +80,7 @@ export async function uploadFileToBucket(
     
     if (uploadError) {
       console.error(`Error uploading file to '${bucketName}/${fullPath}':`, uploadError);
-      return { success: false, error: uploadError };
+      return { success: false, error: uploadError.message };
     }
     
     // Get the public URL
@@ -122,10 +122,13 @@ export async function uploadMultipleFilesToBucket(
   
   for (const file of files) {
     const fileExt = file.name.split('.').pop();
-    const fileName = `${fileNamePrefix}${fileNamePrefix ? '-' : ''}${Date.now()}-${Math.random().toString(36).substring(2, 10)}.${fileExt}`;
+    const fileName = `${fileNamePrefix}${fileNamePrefix ? '-' : ''}${Date.now()}-${Math.random().toString(36).substring(2, 10)}`;
     
     const result = await uploadFileToBucket(bucketName, file, path, fileName);
-    results.push(result);
+    results.push({
+      fileName: file.name,
+      ...result
+    });
   }
   
   return results;

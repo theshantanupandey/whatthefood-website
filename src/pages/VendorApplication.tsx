@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from '@/lib/zod-shim';
-import { toast } from 'sonner';
+import { toast } from '@/components/ui/use-toast';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import AnimatedSection from '@/components/ui/AnimatedSection';
@@ -36,11 +35,13 @@ import {
   Utensils,
   Calendar,
   DollarSign,
-  FileText,
+  File,
   MessageSquare,
   Check,
   Upload,
   ArrowRight,
+  X,
+  Image,
 } from 'lucide-react';
 import { submitVendorApplication, VendorFormData } from '@/services/vendorService';
 import { ensureRequiredBuckets } from '@/utils/setupBuckets';
@@ -125,8 +126,9 @@ const VendorApplication = () => {
   const [selectedMealTypes, setSelectedMealTypes] = useState<string[]>([]);
   const [kitchenPhotos, setKitchenPhotos] = useState<File[]>([]);
   const [foodPhotos, setFoodPhotos] = useState<File[]>([]);
+  const [kitchenPhotoPreviews, setKitchenPhotoPreviews] = useState<string[]>([]);
+  const [foodPhotoPreviews, setFoodPhotoPreviews] = useState<string[]>([]);
   
-  // Ensure buckets exist when component mounts
   useEffect(() => {
     ensureRequiredBuckets().catch(err => {
       console.error('Error setting up buckets:', err);
@@ -155,6 +157,24 @@ const VendorApplication = () => {
       termsAgreed: false,
     },
   });
+
+  useEffect(() => {
+    const kitchenPreviews = kitchenPhotos.map(file => URL.createObjectURL(file));
+    setKitchenPhotoPreviews(kitchenPreviews);
+    
+    return () => {
+      kitchenPreviews.forEach(URL.revokeObjectURL);
+    };
+  }, [kitchenPhotos]);
+  
+  useEffect(() => {
+    const foodPreviews = foodPhotos.map(file => URL.createObjectURL(file));
+    setFoodPhotoPreviews(foodPreviews);
+    
+    return () => {
+      foodPreviews.forEach(URL.revokeObjectURL);
+    };
+  }, [foodPhotos]);
   
   const validateFiles = (files: File[]): { valid: boolean; error?: string } => {
     if (files.length > MAX_FILES) {
@@ -173,17 +193,64 @@ const VendorApplication = () => {
     return { valid: true };
   };
 
+  const handleKitchenPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const fileArray = Array.from(files);
+      const validation = validateFiles(fileArray);
+      
+      if (!validation.valid) {
+        toast({
+          title: "Kitchen Photos Error",
+          description: validation.error,
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setKitchenPhotos(fileArray);
+    }
+  };
+  
+  const handleFoodPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const fileArray = Array.from(files);
+      const validation = validateFiles(fileArray);
+      
+      if (!validation.valid) {
+        toast({
+          title: "Food Photos Error",
+          description: validation.error,
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      setFoodPhotos(fileArray);
+    }
+  };
+
+  const handleRemoveKitchenPhoto = (index: number) => {
+    setKitchenPhotos(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  const handleRemoveFoodPhoto = (index: number) => {
+    setFoodPhotos(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (data: FormValues) => {
     setSubmitting(true);
     setIsUploading(true);
     
     try {
-      // Validate kitchen photos
       if (kitchenPhotos.length > 0) {
         const kitchenValidation = validateFiles(kitchenPhotos);
         if (!kitchenValidation.valid) {
-          toast.error("Kitchen Photos Error", {
-            description: kitchenValidation.error
+          toast({
+            title: "Kitchen Photos Error",
+            description: kitchenValidation.error,
+            variant: "destructive",
           });
           setSubmitting(false);
           setIsUploading(false);
@@ -191,12 +258,13 @@ const VendorApplication = () => {
         }
       }
 
-      // Validate food photos
       if (foodPhotos.length > 0) {
         const foodValidation = validateFiles(foodPhotos);
         if (!foodValidation.valid) {
-          toast.error("Food Photos Error", {
-            description: foodValidation.error
+          toast({
+            title: "Food Photos Error",
+            description: foodValidation.error,
+            variant: "destructive",
           });
           setSubmitting(false);
           setIsUploading(false);
@@ -236,21 +304,30 @@ const VendorApplication = () => {
       const response = await submitVendorApplication(formData);
       
       if (response.success) {
-        toast.success("Application Submitted", {
-          description: "Your vendor application has been submitted successfully. We will contact you soon!"
+        toast({
+          title: "Application Submitted",
+          description: "Your vendor application has been submitted successfully. We will contact you soon!",
+          variant: "default",
         });
-        // Only reset and navigate after successful toast
         setTimeout(() => {
           form.reset();
           setKitchenPhotos([]);
           setFoodPhotos([]);
           navigate('/');
         }, 2000);
+      } else {
+        toast({
+          title: "Submission Failed",
+          description: response.error ? response.error.toString() : "There was an error submitting your application. Please try again.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
       console.error("Error submitting vendor application:", error);
-      toast.error("Submission Failed", {
-        description: error instanceof Error ? error.message : 'An unexpected error occurred'
+      toast({
+        title: "Submission Failed",
+        description: error instanceof Error ? error.message : "An unexpected error occurred",
+        variant: "destructive",
       });
     } finally {
       setSubmitting(false);
@@ -274,7 +351,6 @@ const VendorApplication = () => {
         ? prev.filter(m => m !== mealType)
         : [...prev, mealType];
       
-      // Update form value with the new array
       form.setValue('mealTypes', newMealTypes);
       
       return newMealTypes;
@@ -556,7 +632,6 @@ const VendorApplication = () => {
                                           ? prev.filter(c => c !== cuisine)
                                           : [...prev, cuisine];
                                         
-                                        // Update form value with the new array
                                         form.setValue('cuisines', newCuisines);
                                         
                                         return newCuisines;
@@ -736,105 +811,145 @@ const VendorApplication = () => {
                     {formStep === 4 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
-                          <FileText className="h-5 w-5 text-primary" />
-                          <h2 className="text-xl font-semibold">Documents Upload</h2>
-                          <span className="text-xs bg-accent text-muted-foreground px-2 py-0.5 rounded">Optional</span>
+                          <File className="h-5 w-5 text-primary" />
+                          <h2 className="text-xl font-semibold">Documents & Photos</h2>
                         </div>
                         
-                        <div className="space-y-4">
-                          <p className="text-sm text-muted-foreground">
-                            While optional, providing these documents may expedite your application process.
-                          </p>
+                        <div className="space-y-6">
+                          <div>
+                            <label className="block text-sm font-medium mb-2">
+                              Kitchen Photos
+                              <span className="text-xs text-muted-foreground ml-2">(Optional)</span>
+                            </label>
+                            <div className="space-y-4">
+                              <div
+                                className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
+                                onClick={() => document.getElementById('kitchenPhotosInput')?.click()}
+                              >
+                                <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
+                                <p className="text-sm text-muted-foreground">
+                                  Click to upload or drag and drop
+                                </p>
+                                <p className="text-xs text-muted-foreground mt-1">
+                                  JPG, PNG, WebP (max. 10MB each, up to 5 files)
+                                </p>
+                                <input
+                                  id="kitchenPhotosInput"
+                                  type="file"
+                                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                                  multiple
+                                  className="hidden"
+                                  onChange={handleKitchenPhotoChange}
+                                />
+                              </div>
+                              
+                              {kitchenPhotoPreviews.length > 0 && (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
+                                  {kitchenPhotoPreviews.map((preview, index) => (
+                                    <div key={`kitchen-${index}`} className="relative group">
+                                      <div className="aspect-square rounded-md border overflow-hidden bg-muted">
+                                        <img 
+                                          src={preview} 
+                                          alt={`Kitchen photo ${index + 1}`}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveKitchenPhoto(index)}
+                                        className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        aria-label="Remove photo"
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                      <p className="text-xs text-muted-foreground truncate mt-1">
+                                        {kitchenPhotos[index]?.name}
+                                      </p>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
                           
-                          <div className="space-y-6">
-                            <div>
-                              <label className="block text-sm font-medium mb-2">
-                                FSSAI License
-                              </label>
+                          <div>
+                            <label className="block text-sm font-medium mb-2">
+                              Food Photos
+                              <span className="text-xs text-muted-foreground ml-2">(Optional)</span>
+                            </label>
+                            <div className="space-y-4">
                               <div
                                 className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
-                                onClick={() => document.getElementById('fssaiLicenseInput')?.click()}
+                                onClick={() => document.getElementById('foodPhotosInput')?.click()}
                               >
-                                <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
+                                <Image className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
                                 <p className="text-sm text-muted-foreground">
                                   Click to upload or drag and drop
                                 </p>
                                 <p className="text-xs text-muted-foreground mt-1">
-                                  PDF or Image (max. 5MB)
+                                  JPG, PNG, WebP (max. 10MB each, up to 5 files)
                                 </p>
                                 <input
-                                  id="fssaiLicenseInput"
+                                  id="foodPhotosInput"
                                   type="file"
-                                  accept=".pdf, image/*"
-                                  style={{ display: 'none' }}
-                                  onChange={(e) => {
-                                    const files = e.target.files;
-                                    if (files) {
-                                      setKitchenPhotos(Array.from(files));
-                                    }
-                                  }}
+                                  accept="image/jpeg,image/jpg,image/png,image/webp"
+                                  multiple
+                                  className="hidden"
+                                  onChange={handleFoodPhotoChange}
                                 />
                               </div>
+                              
+                              {foodPhotoPreviews.length > 0 && (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4">
+                                  {foodPhotoPreviews.map((preview, index) => (
+                                    <div key={`food-${index}`} className="relative group">
+                                      <div className="aspect-square rounded-md border overflow-hidden bg-muted">
+                                        <img 
+                                          src={preview} 
+                                          alt={`Food photo ${index + 1}`}
+                                          className="w-full h-full object-cover"
+                                        />
+                                      </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveFoodPhoto(index)}
+                                        className="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        aria-label="Remove photo"
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </button>
+                                      <p className="text-xs text-muted-foreground truncate mt-1">
+                                        {foodPhotos[index]?.name}
+                                      </p>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
                             </div>
-                            
-                            <div>
-                              <label className="block text-sm font-medium mb-2">
-                                GST Certificate (if applicable)
-                              </label>
-                              <div
-                                className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
-                                onClick={() => document.getElementById('gstCertificateInput')?.click()}
-                              >
-                                <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
-                                <p className="text-sm text-muted-foreground">
-                                  Click to upload or drag and drop
-                                </p>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  PDF or Image (max. 5MB)
-                                </p>
-                                <input
-                                  id="gstCertificateInput"
-                                  type="file"
-                                  accept=".pdf, image/*"
-                                  style={{ display: 'none' }}
-                                  onChange={(e) => {
-                                    const files = e.target.files;
-                                    if (files) {
-                                      setFoodPhotos(Array.from(files));
-                                    }
-                                  }}
-                                />
-                              </div>
-                            </div>
-                            
-                            <div>
-                              <label className="block text-sm font-medium mb-2">
-                                Sample Menu & Pricing
-                              </label>
-                              <div
-                                className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
-                                onClick={() => document.getElementById('sampleMenuInput')?.click()}
-                              >
-                                <Upload className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
-                                <p className="text-sm text-muted-foreground">
-                                  Click to upload or drag and drop
-                                </p>
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  PDF or Image (max. 5MB)
-                                </p>
-                                <input
-                                  id="sampleMenuInput"
-                                  type="file"
-                                  accept=".pdf, image/*"
-                                  style={{ display: 'none' }}
-                                  onChange={(e) => {
-                                    const files = e.target.files;
-                                    if (files) {
-                                      // setSampleMenu(Array.from(files));
-                                    }
-                                  }}
-                                />
-                              </div>
+                          </div>
+                          
+                          <div>
+                            <label className="block text-sm font-medium mb-2">
+                              FSSAI Certificate
+                              <span className="text-xs text-muted-foreground ml-2">(Optional)</span>
+                            </label>
+                            <div
+                              className="border-2 border-dashed border-muted-foreground/20 rounded-lg p-6 text-center cursor-pointer hover:bg-muted/50 transition"
+                              onClick={() => document.getElementById('fssaiCertificateInput')?.click()}
+                            >
+                              <File className="h-6 w-6 mx-auto mb-2 text-muted-foreground" />
+                              <p className="text-sm text-muted-foreground">
+                                Click to upload or drag and drop
+                              </p>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                PDF or Image (max. 10MB)
+                              </p>
+                              <input
+                                id="fssaiCertificateInput"
+                                type="file"
+                                accept=".pdf,image/jpeg,image/jpg,image/png"
+                                className="hidden"
+                              />
                             </div>
                           </div>
                         </div>
@@ -884,7 +999,7 @@ const VendorApplication = () => {
                     {formStep === 6 && (
                       <div className="space-y-6">
                         <div className="flex items-center gap-2 mb-4">
-                          <FileText className="h-5 w-5 text-primary" />
+                          <File className="h-5 w-5 text-primary" />
                           <h2 className="text-xl font-semibold">Terms & Conditions</h2>
                         </div>
                         

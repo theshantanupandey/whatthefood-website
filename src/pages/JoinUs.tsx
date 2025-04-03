@@ -24,8 +24,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
-import { ArrowRight, AlertCircle, Upload, X } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
+import { ArrowRight, AlertCircle, Upload, X, FileIcon } from "lucide-react";
 import { submitJobApplication } from "@/services/careerService";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -116,6 +116,7 @@ const JoinUs: React.FC = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [filePreview, setFilePreview] = useState<string | null>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -138,21 +139,48 @@ const JoinUs: React.FC = () => {
         portfolio: "",
       });
       setSelectedFile(null);
+      setFilePreview(null);
     }
   }, [selectedPosition, form]);
+
+  useEffect(() => {
+    if (selectedFile) {
+      if (selectedFile.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setFilePreview(reader.result as string);
+        };
+        reader.readAsDataURL(selectedFile);
+      } else {
+        setFilePreview(null);
+      }
+    } else {
+      setFilePreview(null);
+    }
+
+    return () => {
+      if (filePreview && filePreview.startsWith('blob:')) {
+        URL.revokeObjectURL(filePreview);
+      }
+    };
+  }, [selectedFile]);
 
   const handleFileChange = (files: FileList | null) => {
     const file = files?.item(0);
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        toast.error("File Too Large", {
+        toast({
+          title: "File Too Large",
           description: "Please select a file smaller than 5MB",
+          variant: "destructive",
         });
         return;
       }
       if (!Object.keys(ACCEPTED_FILE_TYPES).includes(file.type)) {
-        toast.error("Invalid File Type", {
+        toast({
+          title: "Invalid File Type",
           description: `Please select a ${Object.values(ACCEPTED_FILE_TYPES).join(', ')} file`,
+          variant: "destructive",
         });
         return;
       }
@@ -162,8 +190,10 @@ const JoinUs: React.FC = () => {
 
   const onSubmit = async (data: FormValues) => {
     if (!selectedPosition || !selectedFile) {
-      toast.error("Missing Required Fields", {
+      toast({
+        title: "Missing Required Fields",
         description: "Please select a position and upload your resume",
+        variant: "destructive",
       });
       return;
     }
@@ -184,24 +214,30 @@ const JoinUs: React.FC = () => {
       const response = await submitJobApplication(formData);
 
       if (response.success) {
-        toast.success("Application Submitted Successfully!", {
+        toast({
+          title: "Application Submitted Successfully!",
           description: "We'll review your application and get back to you soon.",
           duration: 5000,
         });
         form.reset();
         setSelectedPosition(null);
         setSelectedFile(null);
+        setFilePreview(null);
         setIsDialogOpen(false);
       } else {
-        toast.error("Submission Failed", {
-          description: response.error || "There was an error submitting your application. Please try again.",
+        toast({
+          title: "Submission Failed",
+          description: response.error ? response.error.toString() : "There was an error submitting your application. Please try again.",
+          variant: "destructive",
           duration: 7000,
         });
       }
     } catch (error) {
       console.error("Error submitting application:", error);
-      toast.error("Error", {
+      toast({
+        title: "Error",
         description: "An unexpected error occurred. Please try again later.",
+        variant: "destructive",
         duration: 7000,
       });
     } finally {
@@ -333,6 +369,7 @@ const JoinUs: React.FC = () => {
                         if (!open) {
                           setSelectedPosition(null);
                           setSelectedFile(null);
+                          setFilePreview(null);
                           form.reset();
                         }
                       }}
@@ -472,6 +509,7 @@ const JoinUs: React.FC = () => {
                                             size="icon"
                                             onClick={() => {
                                               setSelectedFile(null);
+                                              setFilePreview(null);
                                             }}
                                             className="h-8 w-8 shrink-0"
                                           >
@@ -480,16 +518,45 @@ const JoinUs: React.FC = () => {
                                           </Button>
                                         )}
                                       </div>
+                                      
                                       {selectedFile && (
-                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                                          <div className="flex-1 truncate">
-                                            Selected: {selectedFile.name}
+                                        <div className="flex flex-col space-y-2">
+                                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                            <div className="flex-1 truncate">
+                                              Selected: {selectedFile.name}
+                                            </div>
+                                            <div className="shrink-0">
+                                              ({(selectedFile.size / 1024 / 1024).toFixed(2)}MB)
+                                            </div>
                                           </div>
-                                          <div className="shrink-0">
-                                            ({(selectedFile.size / 1024 / 1024).toFixed(2)}MB)
-                                          </div>
+                                          
+                                          {filePreview && selectedFile.type.startsWith('image/') && (
+                                            <div className="mt-2">
+                                              <img 
+                                                src={filePreview} 
+                                                alt="Resume preview" 
+                                                className="max-h-40 max-w-full object-contain rounded-sm border border-muted"
+                                              />
+                                            </div>
+                                          )}
+                                          
+                                          {selectedFile.type === 'application/pdf' && (
+                                            <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-sm">
+                                              <FileIcon className="h-5 w-5 text-primary" />
+                                              <span className="text-sm">PDF Document</span>
+                                            </div>
+                                          )}
+                                          
+                                          {(selectedFile.type === 'application/msword' || 
+                                            selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') && (
+                                            <div className="flex items-center gap-2 p-2 bg-muted/50 rounded-sm">
+                                              <FileIcon className="h-5 w-5 text-primary" />
+                                              <span className="text-sm">Word Document</span>
+                                            </div>
+                                          )}
                                         </div>
                                       )}
+                                      
                                       <FormDescription className="flex items-center gap-2">
                                         <Upload className="h-4 w-4" />
                                         <span>Upload your resume (PDF, DOC, DOCX - Max 5MB)</span>

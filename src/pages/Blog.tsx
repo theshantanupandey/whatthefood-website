@@ -16,7 +16,7 @@ const blogPosts = [
     title: "How to Meal Prep for a Busy Week",
     excerpt: "Learn the essential steps to prepare healthy meals for the entire week in just 2 hours.",
     category: "meal-prep",
-    image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1172&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1498837167922-ddd27525d352?q=80&w=1172&auto=format&fit=crop",
     author: "Jessica Chen, Nutritionist",
     date: "May 15, 2023",
     featured: true,
@@ -27,7 +27,7 @@ const blogPosts = [
     title: "10 High-Protein Vegetarian Meals",
     excerpt: "Delicious plant-based recipes packed with protein to keep you energized throughout the day.",
     category: "recipes",
-    image: "https://images.unsplash.com/photo-1512058454605-0ae7fa4f68e2?q=80&w=1172&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?q=80&w=1172&auto=format&fit=crop",
     author: "Mark Johnson, Chef",
     date: "June 3, 2023",
     featured: true,
@@ -38,7 +38,7 @@ const blogPosts = [
     title: "Why Consistency Matters More Than Perfection",
     excerpt: "Small, consistent habits lead to better health outcomes than sporadic extreme dieting.",
     category: "fitness",
-    image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1170&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1170&auto=format&fit=crop",
     author: "Alex Rivera, Fitness Coach",
     date: "April 22, 2023",
     featured: true,
@@ -49,7 +49,7 @@ const blogPosts = [
     title: "Understanding Macros: A Beginner's Guide",
     excerpt: "Learn how to balance proteins, carbs, and fats for optimal health and weight management.",
     category: "nutrition",
-    image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=1170&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1505576399279-565b52d4ac71?q=80&w=1170&auto=format&fit=crop",
     author: "Dr. Sarah Wilson, Dietitian",
     date: "July 10, 2023",
     featured: false,
@@ -60,7 +60,7 @@ const blogPosts = [
     title: "The Best Foods to Eat Before a Workout",
     excerpt: "Fuel your exercise routine with these energizing pre-workout meals and snacks.",
     category: "fitness",
-    image: "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1170&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=1170&auto=format&fit=crop",
     author: "Chris Taylor, Sports Nutritionist",
     date: "August 5, 2023",
     featured: false,
@@ -71,7 +71,7 @@ const blogPosts = [
     title: "How to Stay Hydrated Throughout the Day",
     excerpt: "Simple strategies to ensure you're getting enough water and staying properly hydrated.",
     category: "wellness",
-    image: "https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?q=80&w=1170&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1550505095-81378a674395?q=80&w=1170&auto=format&fit=crop",
     author: "Lisa Park, Health Coach",
     date: "May 28, 2023",
     featured: false,
@@ -85,7 +85,7 @@ const successStories = [
     name: "Michael D.",
     title: "Lost 30 pounds in 6 months",
     story: "I've tried many meal plans before, but What The Food made it easy to stick to my diet goals. The convenience and variety kept me on track.",
-    image: "https://images.unsplash.com/photo-1583195764036-6dc248ac07d9?q=80&w=1176&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=1176&auto=format&fit=crop",
     results: "Weight loss, improved energy"
   },
   {
@@ -93,7 +93,7 @@ const successStories = [
     name: "Sophia R.",
     title: "Managed my diabetes through diet",
     story: "The customized meal plans helped me keep my blood sugar levels stable. The dietitian support was invaluable in creating meals that work for my condition.",
-    image: "https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?q=80&w=1176&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=1176&auto=format&fit=crop",
     results: "Stable blood sugar, reduced medication"
   },
   {
@@ -101,7 +101,7 @@ const successStories = [
     name: "James T.",
     title: "Gained 15 pounds of muscle",
     story: "The high-protein meal options and perfect portion sizes helped me reach my muscle-building goals while maintaining a busy work schedule.",
-    image: "https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?q=80&w=1170&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=1170&auto=format&fit=crop",
     results: "Muscle gain, improved strength"
   }
 ];
