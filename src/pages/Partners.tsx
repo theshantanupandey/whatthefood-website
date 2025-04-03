@@ -66,8 +66,17 @@ const Partners = () => {
     setIsSubmitting(true);
     
     try {
+      // Create a properly typed object that matches the PartnerFormData interface
       const formData = {
-        ...data,
+        brandName: data.brandName,
+        website: data.website,
+        industryType: data.industryType,
+        contactName: data.contactName,
+        email: data.email,
+        phone: data.phone,
+        collaborationTypes: data.collaborationTypes,
+        additionalInfo: data.additionalInfo || "",
+        termsAgreed: data.termsAgreed,
         brandDeckFile: selectedFile
       };
       
