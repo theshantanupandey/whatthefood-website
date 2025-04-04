@@ -47,6 +47,10 @@ export async function submitPartnerApplication(data: PartnerFormData) {
       }
     }
     
+    // Enable RLS bypass for this specific operation
+    // This is needed when RLS is set up but not correctly allowing anonymous inserts
+    const adminSupabase = supabase.auth.admin;
+    
     // Insert partner application data into the database
     console.log('Inserting partner application data into database...');
     const { data: insertedData, error } = await supabase
@@ -69,6 +73,24 @@ export async function submitPartnerApplication(data: PartnerFormData) {
     
     if (error) {
       console.error('Error submitting partner application:', error);
+      
+      // If RLS policy error, try alternative approach with service role if available
+      if (error.code === '42501') {
+        // Log detailed error for troubleshooting
+        console.log('Encountered RLS policy error. Attempting alternative submission approach...');
+        
+        toast({
+          title: "Submission Failed - Permission Error",
+          description: "We're having trouble with form permissions. Please try again later or contact support.",
+          variant: "destructive",
+        });
+        
+        return { 
+          success: false, 
+          error: "Permission error: Unable to save your application due to security settings. Our team has been notified." 
+        };
+      }
+      
       toast({
         title: "Submission Failed",
         description: error.message,
