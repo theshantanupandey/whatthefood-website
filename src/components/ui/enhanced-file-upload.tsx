@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { toast } from '@/hooks/use-toast';
 import { X, FileIcon, Upload, CheckCircle, AlertCircle } from 'lucide-react';
 
-interface EnhancedFileUploadProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface EnhancedFileUploadProps {
   onChange: (files: FileList | null) => void;
   value?: File | null;
   accepted?: string[];
@@ -16,6 +15,11 @@ interface EnhancedFileUploadProps extends React.InputHTMLAttributes<HTMLInputEle
   onError?: (errorMessage: string) => void;
   multiple?: boolean;
   description?: string;
+  id?: string;
+  className?: string;
+  required?: boolean;
+  disabled?: boolean;
+  name?: string;
 }
 
 const formatFileSize = (bytes: number): string => {
@@ -42,6 +46,10 @@ export function EnhancedFileUpload({
   multiple = false,
   description,
   id,
+  className,
+  required,
+  disabled,
+  name,
   ...props
 }: EnhancedFileUploadProps) {
   const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -51,7 +59,6 @@ export function EnhancedFileUpload({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
   
-  // Create a unique ID for the file input if not provided
   const inputId = id || `file-upload-${Math.random().toString(36).substring(2, 11)}`;
   
   React.useEffect(() => {
@@ -70,7 +77,6 @@ export function EnhancedFileUpload({
     }
     
     return () => {
-      // Cleanup URL on unmount
       if (previewUrl && previewUrl.startsWith('blob:')) {
         URL.revokeObjectURL(previewUrl);
       }
@@ -104,7 +110,6 @@ export function EnhancedFileUpload({
       return;
     }
     
-    // Check file size
     const file = files[0];
     if (file.size > maxSizeInBytes) {
       const errorMsg = `File too large. Maximum size is ${maxSizeInMB}MB`;
@@ -118,7 +123,6 @@ export function EnhancedFileUpload({
       return;
     }
     
-    // Check file type
     if (accepted.length > 0 && !accepted.includes(file.type)) {
       const errorMsg = `Invalid file type. Please upload ${getAcceptedTypesString(accepted)}`;
       setErrorMessage(errorMsg);
@@ -134,7 +138,6 @@ export function EnhancedFileUpload({
     const cleanup = simulateUploadProgress();
     onChange(files);
     
-    // Cleanup after "upload" completes
     setTimeout(() => {
       cleanup();
     }, 1000);
@@ -191,6 +194,9 @@ export function EnhancedFileUpload({
             multiple={multiple}
             className="hidden"
             aria-invalid={!!errorMessage}
+            required={required}
+            disabled={disabled}
+            name={name}
             {...props}
           />
         </label>

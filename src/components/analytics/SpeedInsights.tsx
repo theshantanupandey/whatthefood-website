@@ -2,40 +2,29 @@
 import { useEffect } from 'react';
 import { injectSpeedInsights } from '@vercel/speed-insights';
 
-interface SpeedInsightEvent {
-  target?: {
-    value?: string;
-  };
-}
-
-interface SpeedInsightData {
-  url?: string;
-  event?: SpeedInsightEvent;
-  attribution?: Record<string, any>;
-}
-
 export default function SpeedInsights() {
   useEffect(() => {
     injectSpeedInsights({
       // Add analytics for form interactions
-      beforeSend: (data: SpeedInsightData) => {
+      beforeSend: (event) => {
         // Filter out sensitive form data before sending
-        if (data.url && data.url.includes('form') && data.event) {
-          // Don't track form input values for privacy
-          if (data.event.target && data.event.target.value) {
-            data.event.target.value = '[REDACTED]';
-          }
-          
-          // Add custom attribution to form events
-          return {
-            ...data,
-            attribution: {
-              ...(data.attribution || {}),
-              formInteraction: true
+        if (event && typeof event === 'object' && 'target' in event) {
+          // If this is a form event with a target containing value
+          if (
+            event.target && 
+            typeof event.target === 'object' && 
+            'value' in event.target
+          ) {
+            // Don't track form input values for privacy
+            const sanitizedEvent = { ...event };
+            if (sanitizedEvent.target && typeof sanitizedEvent.target === 'object') {
+              // Clone and modify the event
+              sanitizedEvent.target = { ...sanitizedEvent.target, value: '[REDACTED]' };
             }
-          };
+            return sanitizedEvent;
+          }
         }
-        return data;
+        return event;
       }
     });
   }, []);
