@@ -61,9 +61,6 @@ export async function submitPartnerApplication(data: PartnerFormData) {
       brand_deck_url: brandDeckUrl
     };
     
-    // Since we're having RLS issues, let's try to save the data temporarily and show a success message
-    // In a production environment, we would implement a proper serverless function with admin rights
-    
     // Store application data in local storage for potential recovery/debugging
     try {
       const tempApplications = JSON.parse(localStorage.getItem('pendingPartnerApplications') || '[]');
@@ -77,7 +74,7 @@ export async function submitPartnerApplication(data: PartnerFormData) {
       console.error('Failed to save application to local storage:', e);
     }
     
-    // Try direct insert (will likely fail due to RLS, but let's try anyway)
+    // Try direct insert
     console.log('Inserting partner application data into database...');
     const { data: insertedData, error } = await supabase
       .from('partner_applications')
@@ -89,18 +86,15 @@ export async function submitPartnerApplication(data: PartnerFormData) {
       
       // Handle RLS policy error specifically
       if (error.code === '42501') {
-        console.log('Encountered RLS policy error. Showing friendly message to user.');
-        
-        // Display a more user-friendly message
         toast({
-          title: "Application Received",
-          description: "Thank you for your interest! While we're experiencing some technical difficulties with our database, we've recorded your submission and our team will be in touch soon.",
+          title: "Submission Failed",
+          description: "Permission error: Unable to save your application due to security settings. Our team has been notified.",
+          variant: "destructive",
         });
         
-        // Return success:true to prevent showing error UI and reset the form
         return { 
-          success: true, 
-          message: "Application recorded. Our team will review it and contact you soon." 
+          success: false, 
+          error: "Permission error: Unable to save your application due to security settings. Our team has been notified."
         };
       }
       
