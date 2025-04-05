@@ -9,6 +9,36 @@
     <meta name="description" content="Fresh, healthy, and affordable meal subscription service in India. Get nutritious home-style meals delivered daily. Perfect for students, bachelors, and busy professionals." />
     <meta name="author" content="What The Food" />
     <meta property="og:image" content="/og-image.png" />
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FoodService",
+      "name": "What The Food",
+      "description": "Fresh, healthy, and affordable meal subscription service in India. Get nutritious home-style meals delivered daily.",
+      "url": "https://whatthefood.in",
+      "image": "https://whatthefood.in/og-image.png",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "IN"
+      },
+      "areaServed": "India",
+      "servesCuisine": "Indian",
+      "priceRange": "$$",
+      "offers": {
+        "@type": "Offer",
+        "category": "Meal Subscription Service",
+        "availability": "https://schema.org/InStock"
+      },
+      "potentialAction": {
+        "@type": "OrderAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://whatthefood.in/meal-plans",
+          "actionPlatform": ["http://schema.org/DesktopWebPlatform", "http://schema.org/MobileWebPlatform"]
+        }
+      }
+    }
+    </script>
   </head>
 
   <body>
