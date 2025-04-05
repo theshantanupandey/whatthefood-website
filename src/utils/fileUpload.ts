@@ -29,31 +29,10 @@ export async function uploadFileToBucket(
 
     console.log(`Starting upload of file ${file.name} (${file.size} bytes) to bucket ${bucketName}`);
     
-    // Create bucket if it doesn't exist
-    console.log(`Ensuring bucket '${bucketName}' exists...`);
-    try {
-      const { error: bucketError } = await supabase.storage.getBucket(bucketName);
-      
-      if (bucketError) {
-        console.log(`Bucket '${bucketName}' not found, creating it...`);
-        const { error: createError } = await supabase.storage.createBucket(bucketName, {
-          public: true, // Make bucket contents publicly accessible
-          fileSizeLimit: 10485760 // 10MB limit
-        });
-        
-        if (createError) {
-          console.error(`Failed to create bucket '${bucketName}':`, createError);
-          return { success: false, error: createError.message };
-        }
-        
-        console.log(`Successfully created bucket '${bucketName}'`);
-      } else {
-        console.log(`Bucket '${bucketName}' exists`);
-      }
-    } catch (err) {
-      console.error(`Error checking/creating bucket '${bucketName}':`, err);
-      // Continue anyway - the upload might still work if bucket exists
-    }
+    // Removed Supabase implementation for bucket creation
+    console.log(`Mock: Ensuring bucket '${bucketName}' exists...`);
+    // In a real implementation, this would check if the bucket exists and create it if needed
+    // For now, we just log the action and continue
     
     // Generate file name if not provided
     const fileExt = file.name.split('.').pop();
@@ -65,28 +44,18 @@ export async function uploadFileToBucket(
     const fullPath = path ? `${path}${fileName}` : fileName;
     
     // Upload the file
-    console.log(`Uploading file to ${bucketName}/${fullPath}...`);
+    console.log(`Mock: Uploading file to ${bucketName}/${fullPath}...`);
     
-    // Convert File to ArrayBuffer for upload
-    const fileBuffer = await file.arrayBuffer();
+    // Removed Supabase implementation for file upload
+    // In a real implementation, this would upload the file to a storage service
+    // For now, we just simulate a successful upload
     
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from(bucketName)
-      .upload(fullPath, fileBuffer, {
-        contentType: file.type,
-        cacheControl: '3600',
-        upsert: true // Overwrite if file exists
-      });
+    // Mock successful upload
+    const uploadData = { path: fullPath };
     
-    if (uploadError) {
-      console.error(`Error uploading file to '${bucketName}/${fullPath}':`, uploadError);
-      return { success: false, error: uploadError.message };
-    }
-    
-    // Get the public URL
-    const { data: urlData } = supabase.storage
-      .from(bucketName)
-      .getPublicUrl(fullPath);
+    // Mock public URL
+    const urlData = { publicUrl: `https://example.com/${bucketName}/${fullPath}` };
+
     
     console.log(`File uploaded successfully to '${bucketName}/${fullPath}'`);
     console.log(`Public URL: ${urlData.publicUrl}`);
