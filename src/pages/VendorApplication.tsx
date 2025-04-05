@@ -306,7 +306,7 @@ const VendorApplication = () => {
       if (response.success) {
         toast({
           title: "Application Submitted",
-          description: "Your vendor application has been submitted successfully. We will contact you soon!",
+          description: response.message || "Your vendor application has been submitted successfully. We will contact you soon!",
           variant: "default",
         });
         setTimeout(() => {
@@ -318,9 +318,10 @@ const VendorApplication = () => {
       } else {
         toast({
           title: "Submission Failed",
-          description: response.error ? response.error.toString() : "There was an error submitting your application. Please try again.",
+          description: response.message || response.error?.toString() || "There was an error submitting your application. Please try again.",
           variant: "destructive",
         });
+        console.error('Form submission error details:', response.error);
       }
     } catch (error) {
       console.error("Error submitting vendor application:", error);
